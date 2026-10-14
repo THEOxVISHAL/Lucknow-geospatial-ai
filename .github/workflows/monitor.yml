@@ -88,7 +88,7 @@ jobs:
           retention-days: 30
           compression-level: 6
       
-      # 9. Create summary for workflow run
+      # 10. Create summary for workflow run
       - name: Create workflow summary
         if: always()
         run: |
@@ -148,7 +148,7 @@ jobs:
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "*Artifacts available for 30 days. Download from Actions page.*" >> $GITHUB_STEP_SUMMARY
       
-      # 10. Notify on failure (optional)
+      # 11. Notify on failure (optional)
       - name: Notify on failure
         if: failure()
         run: |
@@ -156,7 +156,6 @@ jobs:
           # Add webhook notification here if needed:
           # curl -X POST -H 'Content-type: application/json' --data '{"text":"🚨 Lucknow Monitor Failed"}' $SLACK_WEBHOOK_URL
 
-  # Optional: Cleanup old artifacts (keep last 30 days)
   cleanup:
     name: Cleanup Old Artifacts
     runs-on: ubuntu-latest
