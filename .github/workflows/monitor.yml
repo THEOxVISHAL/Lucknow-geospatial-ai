@@ -1,0 +1,169 @@
+name: Daily Lucknow Land Cover Monitor
+
+on:
+  schedule:
+    # Runs daily at 06:00 UTC = 11:30 AM IST
+    - cron: '0 6 * * *'
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  monitor:
+    name: Run Land Cover Monitoring
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # 2. Setup Python
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      
+      # 3. Install system dependencies
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libgdal-dev gdal-bin libproj-dev
+      
+      # 4. Install Python dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install boto3 botocore onnxruntime rasterio scipy pandas pillow
+      
+      # 5. Download model from GitHub Releases
+      - name: Download ONNX model
+        id: download_model
+        run: |
+          mkdir -p weights
+          MODEL_URL="https://github.com/${{ github.repository }}/releases/download/v1.0/lucknow_landcover_final_v1.onnx"
+          
+          echo "Downloading model from $MODEL_URL"
+          if curl -L -f -o weights/lucknow_landcover_final_v1.onnx "$MODEL_URL"; then
+            echo "Model downloaded successfully"
+            ls -lh weights/
+          else
+            echo "::warning::Failed to download model from releases. Please upload model to GitHub Releases v1.0."
+            exit 1
+          fi
+      
+      # 6. Verify model
+      - name: Verify model
+        run: |
+          ls -lh weights/lucknow_landcover_final_v1.onnx
+          python -c "
+          import onnxruntime as ort
+          session = ort.InferenceSession('weights/lucknow_landcover_final_v1.onnx')
+          print('Model input:', session.get_inputs()[0].name, session.get_inputs()[0].shape)
+          print('Model output:', session.get_outputs()[0].name, session.get_outputs()[0].shape)
+          print('✅ Model loaded successfully')
+          "
+      
+      # 7. Run monitoring script
+      - name: Run Land Cover Monitoring
+        id: monitor
+        run: |
+          python free_monitor.py
+        env:
+          # No secrets needed for public AWS S3 access
+      
+      # 8. Upload results as artifact
+      - name: Upload monitoring results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lucknow-monitoring-${{ github.run_id }}-${{ github.run_number }}
+          path: |
+            monitoring_results/
+            results/*.tif
+          retention-days: 30
+          compression-level: 6
+      
+      # 9. Create summary for workflow run
+      - name: Create workflow summary
+        if: always()
+        run: |
+          echo "## 🌾 Lucknow Land Cover Monitoring Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Run:** #${{ github.run_number }} | **Date:** $(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find latest report
+          REPORT_FILE=$(find monitoring_results -name "report_*.json" -type f | sort | tail -1)
+          if [ -f "$REPORT_FILE" ]; then
+            echo "### 📊 Class Distribution" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Class | Percentage | Pixels |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|------------|--------|" >> $GITHUB_STEP_SUMMARY
+            
+            python -c "
+            import json
+            with open('$REPORT_FILE') as f:
+                data = json.load(f)
+            for cls, stats in data['class_distribution'].items():
+                print(f'| {cls} | {stats[\"percent\"]:.2f}% | {stats[\"pixels\"]:,} |')
+            " >> $GITHUB_STEP_SUMMARY
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📍 Area Monitored" >> $GITHUB_STEP_SUMMARY
+            python -c "
+            import json
+            with open('$REPORT_FILE') as f:
+                data = json.load(f)
+            print(f\"**{data['area_km2']:.1f} km²** (Lucknow city)\")
+            " >> $GITHUB_STEP_SUMMARY
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            ALERTS=$(python -c "
+            import json
+            with open('$REPORT_FILE') as f:
+                data = json.load(f)
+            for a in data.get('alerts', []):
+                print(f'- {a}')
+            ")
+            
+            if [ -n "$ALERTS" ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### 🚨 Alerts" >> $GITHUB_STEP_SUMMARY
+              echo "$ALERTS" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### ✅ No Alerts" >> $GITHUB_STEP_SUMMARY
+              echo "All indicators within normal thresholds." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⚠️ No report generated yet." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Artifacts available for 30 days. Download from Actions page.*" >> $GITHUB_STEP_SUMMARY
+      
+      # 10. Notify on failure (optional)
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Monitoring workflow failed. Check logs for details."
+          # Add webhook notification here if needed:
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"🚨 Lucknow Monitor Failed"}' $SLACK_WEBHOOK_URL
+
+  # Optional: Cleanup old artifacts (keep last 30 days)
+  cleanup:
+    name: Cleanup Old Artifacts
+    runs-on: ubuntu-latest
+    needs: monitor
+    if: always()
+    steps:
+      - name: Delete old artifacts
+        uses: actions/delete-artifacts@v2
+        with:
+          days: 30
