@@ -122,14 +122,3 @@ jobs:
         if: failure()
         run: |
           echo "::error::Monitoring workflow failed. Check logs for details."
-
-    cleanup:
-      name: Cleanup Old Artifacts
-      runs-on: ubuntu-latest
-      needs: monitor
-      if: always()
-      steps:
-        - name: Delete old artifacts
-          uses: actions/delete-artifacts@v2
-          with:
-            days: 30
