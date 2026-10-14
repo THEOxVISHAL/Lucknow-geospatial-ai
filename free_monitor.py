@@ -16,6 +16,7 @@ from pathlib import Path
 import json
 import pandas as pd
 from botocore.config import Config
+from botocore import UNSIGNED
 import warnings
 warnings.filterwarnings("ignore")
 
