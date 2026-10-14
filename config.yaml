@@ -1,0 +1,85 @@
+project:
+  name: "lucknow_landcover_2026"
+  aoi_path: "data/aoi_lucknow.geojson"
+  dates: ["2025-10-14", "2025-12-13", "2026-03-10", "2026-04-09"]
+  classes:
+    0: "Dense_Forest"
+    1: "Open_Forest"
+    2: "Agriculture"
+    3: "Urban"
+    4: "Water"
+    5: "Bare_Fallow"
+
+data:
+  chip_size: 512
+  stride: 64
+  bands: [2, 3, 4, 5, 6, 7, 8, '8a', 11, 12]
+  indices: ["NDVI", "NDWI", "NDBI", "BSI", "SAVI", "EVI", "NBR"]
+  total_channels: 17
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  spatial_split: true
+  cloud_threshold: 0.1
+  use_class_balanced_sampling: true
+  curriculum_learning: true
+  curriculum_epochs: 30
+
+model:
+  architecture: "UperNet"
+  encoder: "efficientnet-b5"
+  encoder_weights: "imagenet"
+  in_channels: 17
+  classes: 6
+  activation: null
+  decoder_channels: [256, 256, 256, 256, 256]
+  decoder_use_batchnorm: true
+
+training:
+  epochs: 300
+  batch_size: 4
+  num_workers: 2
+  pin_memory: true
+  lr: 3e-4
+  weight_decay: 0.01
+  mixed_precision: true
+  gradient_accumulation: 2
+  scheduler: "CosineAnnealingWarmRestarts"
+  T_0: 20
+  T_mult: 2
+  warmup_epochs: 10
+  early_stop_patience: 25
+  gradient_clip: 1.0
+  ema_decay: 0.995
+  mixup_alpha: 0.2
+  cutmix_alpha: 1.0
+  label_smoothing: 0.05
+  freeze_encoder_epochs: 15
+
+loss:
+  focal_weight: 0.4
+  dice_weight: 0.4
+  lovasz_weight: 0.2
+  boundary_weight: 0.0
+  focal_gamma: 2.0
+  label_smoothing: 0.05
+
+augmentation:
+  p_rotate90: 0.5
+  p_flip: 0.5
+  p_brightness_contrast: 0.3
+  p_gaussian_noise: 0.2
+  p_gamma: 0.1
+  p_elastic: 0.15
+  p_grid_distortion: 0.15
+  p_optical_distortion: 0.1
+  p_copy_paste: 0.2
+  p_grid_dropout: 0.1
+  p_downscale: 0.15
+  p_crop_borders: 0.1
+
+inference:
+  tta: true
+  tta_transforms: ["original", "hflip", "vflip", "rot90", "rot180", "rot270"]
+  batch_size: 4
+  output_format: "onnx_fp16"
