@@ -4,9 +4,9 @@ project:
   dates: ["2025-10-14", "2025-12-13", "2026-03-10", "2026-04-09"]
   classes:
     0: "Dense_Forest"
-    1: "Open_Forest"
-    2: "Agriculture"
-    3: "Urban"
+    1: "Urban"
+    2: "Open_Forest"
+    3: "Agriculture"
     4: "Water"
     5: "Bare_Fallow"
 

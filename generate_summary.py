@@ -35,7 +35,9 @@ def main():
             lines.append("### Class Distribution\n")
             lines.append("| Class | Percentage | Pixels |")
             lines.append("|-------|------------|--------|")
-            for cls, stats in data.get("class_distribution", {}).items():
+            dist = data.get("class_distribution", {})
+            sorted_classes = sorted(dist.items(), key=lambda x: x[1].get("percent", 0), reverse=True)
+            for cls, stats in sorted_classes:
                 lines.append(f"| {cls} | {stats['percent']:.2f}% | {stats['pixels']:,} |")
 
             lines.append("\n### Area Monitored\n")

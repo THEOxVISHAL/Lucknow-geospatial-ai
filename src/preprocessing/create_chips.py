@@ -102,7 +102,7 @@ def create_spatial_chips(
             "transform": transform.to_gdal(),
             "crs": crs.to_string(),
             "n_chips": {"train": len(train_idx), "val": len(val_idx), "test": len(test_idx)},
-            "class_names": {0:"Dense_Forest",1:"Open_Forest",2:"Agriculture",3:"Urban",4:"Water",5:"Bare_Fallow"}
+            "class_names": {0:"Dense_Forest",1:"Urban",2:"Open_Forest",3:"Agriculture",4:"Water",5:"Bare_Fallow"}
         }
         with open(Path(output_dir) / "meta.json", "w") as f:
             json.dump(meta, f, indent=2)

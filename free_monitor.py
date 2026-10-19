@@ -40,7 +40,7 @@ OUTPUT_DIR = SCRIPT_DIR / "monitoring_results"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 MODEL_PATH = SCRIPT_DIR / "weights" / "lucknow_landcover_final_v1.onnx"
 
-CLASS_NAMES = ["Dense Forest", "Open Forest", "Agriculture", "Urban", "Water", "Bare/Fallow"]
+CLASS_NAMES = ["Dense Forest", "Urban", "Open Forest", "Agriculture", "Water", "Bare/Fallow"]
 
 # Normalization stats from model training
 MEAN = np.array([0.12, 0.11, 0.10, 0.13, 0.18, 0.21, 0.23, 0.22, 0.18, 0.12,
@@ -50,8 +50,8 @@ STD  = np.array([0.08, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.11, 0.09, 0.07,
 
 # Alert thresholds
 ALERT_THRESHOLDS = {
-    "Urban": {"max": 60, "msg": "HIGH: Urban expansion exceeds 60%"},
-    "Forest": {"min": 30, "msg": "WARNING: Forest cover below 30%"},
+    "Urban": {"max": 75.0, "msg": "HIGH: Urban expansion exceeds 75%"},
+    "Forest": {"min": 15.0, "msg": "WARNING: Forest cover below 15%"},
     "Water": {"min": 1.0, "msg": "WARNING: Water bodies critically low (< 1%)"}
 }
 
@@ -245,11 +245,11 @@ def save_report(timestamp, date_str, stats, pred, cloud_pct):
     water_pct = stats.get("Water", {}).get("percent", 0.0)
 
     if urban_pct > ALERT_THRESHOLDS["Urban"]["max"]:
-        alerts.append(f"HIGH: Urban {urban_pct:.1f}% > 60%")
+        alerts.append(f"HIGH: Urban {urban_pct:.1f}% > {ALERT_THRESHOLDS['Urban']['max']:.0f}%")
     if forest_pct < ALERT_THRESHOLDS["Forest"]["min"]:
-        alerts.append(f"WARNING: Forest cover {forest_pct:.1f}% < 30%")
+        alerts.append(f"WARNING: Forest cover {forest_pct:.1f}% < {ALERT_THRESHOLDS['Forest']['min']:.0f}%")
     if water_pct < ALERT_THRESHOLDS["Water"]["min"]:
-        alerts.append(f"WARNING: Water bodies {water_pct:.1f}% < 1.0%")
+        alerts.append(f"WARNING: Water bodies {water_pct:.1f}% < {ALERT_THRESHOLDS['Water']['min']:.1f}%")
 
     area_km2 = round(pred.size * 0.0001, 1)
 
