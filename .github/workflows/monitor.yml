@@ -68,55 +68,7 @@ jobs:
           compression-level: 6
       - name: Create workflow summary
         if: always()
-        run: |
-          echo "## Lucknow Land Cover Monitoring Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Run:** #${{ github.run_number }} | **Date:** $(date -u +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          REPORT_FILE=$(find monitoring_results -name "report_*.json" -type f | sort | tail -1)
-          if [ -f "$REPORT_FILE" ]; then
-            echo "### Class Distribution" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "| Class | Percentage | Pixels |" >> $GITHUB_STEP_SUMMARY
-            echo "|-------|------------|--------|" >> $GITHUB_STEP_SUMMARY
-            python -c "
-            import json
-            with open('$REPORT_FILE') as f:
-                data = json.load(f)
-            for cls, stats in data['class_distribution'].items():
-                print(f'| {cls} | {stats[\"percent\"]:.2f}% | {stats[\"pixels\"]:,} |')
-            " >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Area Monitored" >> $GITHUB_STEP_SUMMARY
-            python -c "
-            import json
-            with open('$REPORT_FILE') as f:
-                data = json.load(f)
-            print(f\"**{data['area_km2']:.1f} km2** (Lucknow city)\")
-            " >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            ALERTS=$(python -c "
-            import json
-            with open('$REPORT_FILE') as f:
-                data = json.load(f)
-            for a in data.get('alerts', []):
-                print(f'- {a}')
-            ")
-            if [ -n "$ALERTS" ]; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "### Alerts" >> $GITHUB_STEP_SUMMARY
-              echo "$ALERTS" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "### No Alerts" >> $GITHUB_STEP_SUMMARY
-              echo "All indicators within normal thresholds." >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "No report generated yet." >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "*Artifacts available for 30 days. Download from Actions page.*" >> $GITHUB_STEP_SUMMARY
+        run: python generate_summary.py "${{ github.run_number }}"
       - name: Notify on failure
         if: failure()
         run: |
