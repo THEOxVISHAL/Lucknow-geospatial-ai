@@ -7,6 +7,9 @@ import sys
 import json
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 
 def main():
     run_number = sys.argv[1] if len(sys.argv) > 1 else "N/A"
@@ -45,12 +48,45 @@ def main():
 
             alerts = data.get("alerts", [])
             if alerts:
-                lines.append("### Alerts\n")
+                lines.append("### Environmental Threshold Alerts\n")
                 for a in alerts:
                     lines.append(f"- {a}")
             else:
-                lines.append("### No Alerts\n")
-                lines.append("All indicators within normal thresholds.")
+                lines.append("### Environmental Thresholds\n")
+                lines.append("All land cover indicators within normal thresholds.\n")
+
+            # Encroachment & Illegal Construction Section
+            enc_data = data.get("encroachments", {})
+            alerts_csv_file = results_dir / "encroachment_alerts_latest.csv"
+
+            lines.append("### 🚨 Illegal Construction & Encroachment Surveillance\n")
+            if enc_data.get("restricted_violations", 0) > 0:
+                v_count = enc_data["restricted_violations"]
+                v_area = enc_data["total_violation_area_sqm"]
+                lines.append(f"⚠️ **{v_count} unauthorized encroachment sites** detected in protected zones ({v_area:,} m² / {v_area/10000:.2f} hectares).\n")
+                lines.append("| Site ID | Severity | Protected Zone | Area | Coordinates | Map Link |")
+                lines.append("|---------|----------|----------------|------|-------------|----------|")
+                for site in enc_data.get("top_alerts", [])[:5]:
+                    lines.append(f"| `{site['site_id']}` | **{site['severity']}** | {site['zone_name']} | {site['area_sqm']:,} m² | `{site['latitude']}, {site['longitude']}` | [Open Map]({site['maps_url']}) |")
+                lines.append("\n*Full vector GeoJSON and CSV alerts available in downloaded artifacts.*")
+            elif alerts_csv_file.exists():
+                try:
+                    import pandas as pd
+                    df = pd.read_csv(alerts_csv_file)
+                    v_df = df[df.get("is_restricted_violation", False)]
+                    if not v_df.empty:
+                        lines.append(f"⚠️ **{len(v_df)} unauthorized encroachment sites** detected ({v_df['area_sqm'].sum():,} m²).\n")
+                        lines.append("| Site ID | Severity | Protected Zone | Area | Coordinates | Map Link |")
+                        lines.append("|---------|----------|----------------|------|-------------|----------|")
+                        for _, site in v_df.head(5).iterrows():
+                            lines.append(f"| `{site['site_id']}` | **{site['severity']}** | {site['zone_name']} | {site['area_sqm']:,} m² | `{site['latitude']}, {site['longitude']}` | [Open Map]({site['maps_url']}) |")
+                        lines.append("\n*Full vector GeoJSON and CSV alerts available in downloaded artifacts.*")
+                    else:
+                        lines.append("✅ **No illegal construction detected** in designated restricted zones.")
+                except Exception:
+                    lines.append("✅ **No illegal construction detected** in designated restricted zones.")
+            else:
+                lines.append("✅ **No illegal construction detected** in designated restricted zones.")
 
             lines.append("\n---\n*Artifacts available for 30 days. Download from Actions page.*")
         except Exception as e:

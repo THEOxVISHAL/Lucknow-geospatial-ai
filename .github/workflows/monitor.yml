@@ -29,7 +29,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install boto3 botocore onnxruntime rasterio scipy pandas pillow
+          pip install boto3 botocore onnxruntime rasterio scipy pandas pillow shapely
       - name: Download ONNX model
         id: download_model
         run: |

@@ -339,6 +339,32 @@ def run_monitoring():
     stats = compute_stats(pred)
     save_report(timestamp, date_str, stats, pred, cloud_pct)
 
+    # 7. Run Autonomous Encroachment & Illegal Construction Detection
+    try:
+        from detect_encroachment import detect_encroachments, find_latest_and_baseline_rasters
+        _, baseline_path = find_latest_and_baseline_rasters(OUTPUT_DIR)
+        if baseline_path and baseline_path.exists():
+            enc_result = detect_encroachments(
+                latest_raster_path=pred_path,
+                baseline_raster_path=baseline_path,
+                output_dir=OUTPUT_DIR,
+                timestamp=timestamp
+            )
+            latest_report_file = OUTPUT_DIR / "report_latest.json"
+            if latest_report_file.exists():
+                with open(latest_report_file, "r") as rf:
+                    rdata = json.load(rf)
+                rdata["encroachments"] = {
+                    "total_expansion_sites": enc_result["total_sites"],
+                    "restricted_violations": enc_result["restricted_violations"],
+                    "total_violation_area_sqm": enc_result["total_violation_area_sqm"],
+                    "top_alerts": enc_result["alerts"][:10]
+                }
+                with open(latest_report_file, "w") as wf:
+                    json.dump(rdata, wf, indent=2)
+    except Exception as enc_err:
+        print(f"Warning: Encroachment detection skipped or failed: {enc_err}")
+
     elapsed = (datetime.now() - start_time).total_seconds()
     print(f"[{datetime.now()}] Monitoring completed successfully in {elapsed:.1f}s.")
 
