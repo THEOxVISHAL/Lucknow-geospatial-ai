@@ -40,7 +40,7 @@ jobs:
         id: download_model
         run: |
           mkdir -p weights
-          MODEL_URL="https://github.com/THEOxVISHAL/lucknow-landcover/releases/download/v1.0/lucknow_landcover_final_v1.onnx"
+          MODEL_URL="https://github.com/THEOxVISHAL/Lucknow-geospatial-ai/releases/download/v1.0/lucknow_landcover_final_v1.onnx"
           echo "Downloading trained model from $MODEL_URL"
           if curl -L -f -o weights/lucknow_landcover_final_v1.onnx "$MODEL_URL"; then
             echo "Model downloaded successfully"

@@ -140,10 +140,10 @@ pip install -r requirements.txt
 ```
 
 ### 2. Download Model Weights
-Model weights (`lucknow_landcover_final_v1.onnx`) are hosted on [GitHub Releases v1.0](https://github.com/THEOxVISHAL/lucknow-landcover/releases/tag/v1.0):
+Model weights (`lucknow_landcover_final_v1.onnx`) are hosted on [GitHub Releases v1.0](https://github.com/THEOxVISHAL/Lucknow-geospatial-ai/releases/tag/v1.0):
 ```bash
 mkdir -p weights
-curl -L -o weights/lucknow_landcover_final_v1.onnx https://github.com/THEOxVISHAL/lucknow-landcover/releases/download/v1.0/lucknow_landcover_final_v1.onnx
+curl -L -o weights/lucknow_landcover_final_v1.onnx https://github.com/THEOxVISHAL/Lucknow-geospatial-ai/releases/download/v1.0/lucknow_landcover_final_v1.onnx
 ```
 
 ### 3. Run Daily Monitoring & Encroachment Detection
