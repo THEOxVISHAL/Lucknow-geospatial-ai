@@ -1,0 +1,44 @@
+# ==============================================================================
+# LUCKNOW GEOSPATIAL AI - GITIGNORE CONFIGURATION
+# ==============================================================================
+
+# Virtual Environment & Node
+venv/
+node_modules/
+__pycache__/
+*.pyc
+
+# Security & Environment Secrets (CRITICAL: NEVER COMMIT)
+.env
+*.env
+
+# Large Machine Learning Weights (>100MB exceeds GitHub hard limit)
+*.pth
+*.onnx
+*.pkl
+weights/
+weights_backup*.pth
+
+# Heavy Satellite Imagery & Raw Archives (Gigabytes)
+*.tif
+*.tiff
+*.SAFE/
+*.zip
+*.tar*
+data/raw/
+data/processed/
+data/chips/
+data/labels/
+data/predictions/
+data/202*
+data/S2A*
+
+# Heavy TIFFs inside results
+results/*.tif
+results/*.tiff
+
+# Experiment Logs & Backups
+*.log
+wandb/
+demo_rgb.tif.aux.xml
+lucknow_3d_dashboard_backup.html

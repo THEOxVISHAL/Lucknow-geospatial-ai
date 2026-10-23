@@ -1,0 +1,70 @@
+# Lucknow Land Cover Classification Configuration
+
+project:
+  name: "lucknow_landcover"
+  aoi_bounds: [80.50, 26.50, 81.22, 27.17]  # [min_lon, min_lat, max_lon, max_lat]
+  crs: "EPSG:4326"
+  tile_size: 512
+  stride: 256
+
+data:
+  source: "sentinel2_l2a"
+  dates: ["2023-10", "2023-12", "2024-03", "2024-04"]  # seasonal composites
+  bands: ["B02", "B03", "B04", "B05", "B06", "B07", "B08", "B8A", "B11", "B12"]  # 10m + 20m resampled
+  resolution: 10
+  cloud_threshold: 0.2
+  indices: ["NDVI", "NDBI", "MNDWI", "BAI", "EVI"]
+
+classes:
+  names: ["Built-up", "Dense_Vegetation", "Agriculture", "Water", "Bare_Soil", "Wetlands"]
+  n_classes: 6
+  colors:
+    - [255, 0, 0]      # Built-up - Red
+    - [0, 100, 0]      # Dense Veg - Dark Green
+    - [200, 200, 0]    # Agriculture - Yellow
+    - [0, 0, 255]      # Water - Blue
+    - [200, 150, 100]  # Bare Soil - Tan
+    - [0, 150, 150]    # Wetlands - Teal
+
+model:
+  architecture: "unet"
+  encoder: "efficientnet-b0"
+  encoder_weights: "imagenet"
+  in_channels: 40  # 4 dates * 10 bands
+  pretrained: true
+  activation: "softmax"
+
+training:
+  batch_size: 8
+  epochs: 50
+  lr: 0.001
+  weight_decay: 1e-4
+  optimizer: "adamw"
+  scheduler: "cosine_annealing"
+  loss: "ce_dice"  # CrossEntropy + Dice
+  augmentation:
+    - "horizontal_flip"
+    - "vertical_flip"
+    - "rotate_90"
+    - "gaussian_noise"
+    - "spectral_mixup"
+  val_split: 0.2
+  spatial_cv: true  # Spatial block cross-validation
+
+inference:
+  batch_size: 16
+  tta: true  # Test-time augmentation
+  postprocess:
+    - "majority_filter"
+    - "min_area_removal"
+  min_area_pixels: 100
+
+label_generation:
+  osm_tags:
+    builtup: ["building", "highway", "landuse=residential", "landuse=commercial", "landuse=industrial"]
+    water: ["water", "waterway", "natural=water"]
+    vegetation: ["forest", "wood", "landuse=forest", "natural=tree_row"]
+    agriculture: ["farmland", "farm", "landuse=farmland", "crop"]
+    wetland: ["wetland", "marsh", "swamp"]
+  n_samples_per_class: 200
+  active_learning_rounds: 3

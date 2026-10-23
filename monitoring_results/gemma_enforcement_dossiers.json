@@ -1,0 +1,18 @@
+[
+  {
+    "site_id": "LKO-ENC-20261023-467",
+    "zone": "Gomti River Protected Floodplain",
+    "area_sqm": 31800.0,
+    "area_bigha": 12.57,
+    "coordinates": {
+      "lat": 26.81437,
+      "lon": 81.01223
+    },
+    "gemma_forensics": "Satellite imagery reveals significant land reclamation activities within the Gomti floodplain, characterized by irregular concrete plinths and new linear road cuts encroaching upon previous agricultural patches. The presence of expanding greyish-white geometric structures indicates unauthorized permanent masonry construction amidst the riparian vegetation buffer.",
+    "environmental_threat": "The destruction of the Gomti flood retention buffer significantly increases the risk of catastrophic urban flooding in Lucknow during monsoon seasons and compromises local groundwater recharge capacity.",
+    "statutory_violation": "Violation of NGT Gomti Buffer Order O.A. 6/2012 and Section 27 of the UP Urban Planning & Development Act 1973.",
+    "demolition_notice": "Notice is hereby served to all unauthorized occupants of Site LKO-ENC-20261023-467 regarding the illegal construction in the protected Gomti floodplain. You are directed to cease all construction activity immediately and remove all encroachments within 48 hours of this notice. Failure to comply will result in summary demolition by the LDA enforcement wing at your cost and risk, followed by criminal proceedings under the UP Urban Planning Act.",
+    "tactical_radio_script": "All units, urgent dispatch: Proceed to Site LKO-ENC-20261023-467, Gomti floodplain. Illegal construction detected. Secure perimeter, prevent further encroachment, and await LDA demolition squad.",
+    "audio_file": "D:\\lucknow_landcover\\monitoring_results\\audio\\LKO-ENC-20261023-467_dispatch.txt"
+  }
+]

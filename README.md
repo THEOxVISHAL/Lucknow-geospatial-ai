@@ -115,7 +115,8 @@ flowchart LR
     E -->|Restricted Zones Overlay| F["📑 Encroachment GeoJSON & CSV"]
     F -->|Satellite Visual Chips| G["🧠 Gemma 4 Multimodal Agent (gemma_inspector.py)"]
     G -->|Forensic Audit & Legal Notice| H["🏛️ Official Enforcement Dossier (JSON/MD)"]
-    G -->|Interactive 3D Audit| I["🌐 3D Digital Twin (lucknow_3d_dashboard.html)"]
+    H -->|Surveillance & GPS Telemetry| I["🌐 Primary Web Dashboard (index.html)"]
+    H -->|WebGL 3D Digital Twin| J["🛰️ 3D Command Center (lucknow_3d_dashboard.html)"]
 ```
 
 1. **Daily Cron Trigger**: GitHub Actions wakes up daily at 06:00 UTC.
@@ -177,8 +178,16 @@ Generated files in `monitoring_results/`:
 
 ## 🌐 Interactive Web Dashboards
 
-- **2D Geospatial Portal (`index.html`)**: Mapbox GL JS dual-pane satellite swipe, opacity control, time-series telemetry charts, and interactive **🚨 Show Encroachments** layer with click popups.
-- **3D Digital Twin Command Center (`lucknow_3d_dashboard.html`)**: Three.js WebGL engine rendering high-resolution extruded polygonal land cover models with waypoint camera flight controls and interactive **🚨 Gemma 4 Satellite Intelligence Dossier** modal.
+### 🖥️ Primary Dashboard: `index.html` (Dual-Pane Satellite vs AI Surveillance)
+The primary operational command interface is [`index.html`](index.html). It runs entirely client-side with zero build step required:
+- **Dual-Pane Synchronized Maps**: Side-by-side comparison of ESA Sentinel-2 true-color surface reflectance (Left) vs 17-channel deep learning land cover segmentation (Right).
+- **Synchronized 60 FPS Neon Blinking**: Critical encroachment sites in **Gomti River Floodplain** and **Kukrail Reserve Forest** pulsate smoothly across both maps simultaneously with tactical warning glow halos.
+- **Interactive GPS Coordinates Telemetry Modal**: Instant access to all **66 verified violation sites** with live filtering/search, exact Lat/Lon degrees, area in Bighas & m², one-click Google Maps links, and bulk CSV export (`lucknow_illegal_encroachments_gps_66_sites.csv`).
+- **Telemetry & Time-Series Analytics**: Interactive multi-year distribution charts, class opacity sliders, and polygon inspector popups.
+- **Zero-Setup Launch**: Simply double-click `index.html` in your browser (uses CORS-free embedded fallback data) or deploy directly via **GitHub Pages**.
+
+### 🛰️ Supplementary 3D Command Center: `lucknow_3d_dashboard.html`
+- Three.js WebGL engine rendering extruded polygonal terrain models with waypoint camera flight controls and interactive **🚨 Gemma 4 Satellite Intelligence Dossier** slide-out modal.
 
 ---
 

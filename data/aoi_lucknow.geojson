@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "properties": {"name": "Lucknow_Urban"},
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[
+       [80.50, 26.50], [81.22, 26.50], [81.22, 27.17], [80.50, 27.17], [80.50, 26.50]
+      ]]
+    }
+  }]
+}

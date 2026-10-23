@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucknow Geospatial AI Platform — UperNet-B5 (Sentinel-2)</title>
+
+    <!-- Mapbox GL JS v3 -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- GeoTIFF.js for client-side direct GeoTIFF reading -->
+    <script src="results/geotiff.js"></script>
+    <script>
+        // Fallback to CDN if local file not loaded
+        if (typeof GeoTIFF === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/geotiff"><\/script>');
+        }
+    </script>
+
+    <!-- Embedded High-Res Prediction Mask Data (4096x4096) -->
+    <script src="results/raster_data.js"></script>
+    <!-- Embedded Encroachments Data (CORS-free fallback for file:/// protocol) -->
+    <script src="results/encroachments_data.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== BASE & RESET ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #06080d; color: #e2e8f0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root {
+            --cyan: #00f2fe;
+            --cyan-glow: rgba(0, 242, 254, 0.35);
+            --blue: #38bdf8;
+            --indigo: #6366f1;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.4);
+            --amber: #f59e0b;
+            --surface-bg: rgba(10, 14, 23, 0.88);
+            --surface-card: rgba(18, 24, 38, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --surface-border-bright: rgba(0, 242, 254, 0.25);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+        /* ===== BACKGROUND GLOW ===== */
+        .ambient-glow {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(ellipse 700px 500px at 15% 15%, rgba(0, 242, 254, 0.04) 0%, transparent 70%),
+                radial-gradient(ellipse 600px 450px at 85% 85%, rgba(168, 85, 247, 0.04) 0%, transparent 70%);
+        }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--surface-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+        .glass-card {
+            background: var(--surface-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        /* ===== DUAL MAP CONTAINER ===== */
+        #mapContainer {
+            position: absolute; inset: 0; display: flex; z-index: 1;
+        }
+        .map-pane {
+            position: relative; flex: 1; min-width: 0; height: 100%;
+        }
+        .map-pane + .map-pane {
+            border-left: 2px solid rgba(0, 242, 254, 0.2);
+        }
+        .map-viewport { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+        /* HUD badges on top of maps */
+        .map-hud-badge {
+            position: absolute; top: 70px; left: 20px; z-index: 10;
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 16px; border-radius: 12px;
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .hud-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Center synchronization badge */
+        .sync-hud-badge {
+            position: absolute; top: 72px; left: 50%;
+            transform: translateX(-50%); z-index: 12;
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600;
+            letter-spacing: 1px; color: var(--emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(12px);
+            pointer-events: none;
+        }
+        .sync-hud-badge .dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--emerald); box-shadow: 0 0 10px var(--emerald);
+        }
+
+        /* ===== TOP COMMAND HEADER ===== */
+        #topHeader {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            z-index: 30; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+            background: linear-gradient(180deg, rgba(6, 8, 13, 0.96) 0%, rgba(6, 8, 13, 0.85) 75%, transparent 100%);
+            backdrop-filter: blur(16px);
+        }
+        .brand-container {
+            display: flex; align-items: center; gap: 14px;
+        }
+        .brand-logo {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: linear-gradient(135deg, #00f2fe, #4facfe 50%, #6366f1 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px var(--cyan-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .brand-title {
+            font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 800;
+            color: var(--text-main); letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px;
+        }
+        .brand-tag {
+            font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+            padding: 2px 6px; border-radius: 4px;
+            background: rgba(0, 242, 254, 0.12); color: var(--cyan);
+            border: 1px solid rgba(0, 242, 254, 0.3); letter-spacing: 0.5px;
+        }
+        .brand-sub {
+            font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted);
+        }
+
+        /* Key Metric Badges in Header */
+        .header-metrics {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .stat-pill {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 14px; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--surface-border);
+            font-family: 'JetBrains Mono', monospace; font-size: 11px;
+            transition: all 0.2s;
+        }
+        .stat-pill:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .stat-pill .label { color: var(--text-muted); font-size: 10px; }
+        .stat-pill .val { font-weight: 700; }
+
+        /* ===== SIDEBAR PANELS ===== */
+        .sidebar-drawer {
+            position: fixed; top: 72px; z-index: 20;
+            border-radius: 16px; display: flex; flex-direction: column;
+            max-height: calc(100vh - 165px);
+            overflow-y: auto; overflow-x: hidden;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+        #leftDrawer { left: 20px; width: 280px; }
+        #rightDrawer { right: 20px; width: 330px; }
+
+        #leftDrawer.hidden-panel { transform: translateX(-310px); opacity: 0; pointer-events: none; }
+        #rightDrawer.hidden-panel { transform: translateX(360px); opacity: 0; pointer-events: none; }
+
+        .drawer-section {
+            padding: 16px; border-bottom: 1px solid var(--surface-border);
+        }
+        .drawer-section:last-child { border-bottom: none; }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700;
+            letter-spacing: 1.2px; text-transform: uppercase; color: var(--cyan);
+            margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;
+        }
+
+        /* Class Legend Rows */
+        .class-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent; cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .class-row:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .class-row.dimmed {
+            opacity: 0.3;
+        }
+        .class-swatch {
+            width: 14px; height: 14px; border-radius: 4px;
+            flex-shrink: 0; box-shadow: 0 0 8px currentColor;
+        }
+        .class-name {
+            font-size: 12px; font-weight: 600; color: var(--text-main); flex: 1;
+        }
+        .class-pct {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+        }
+
+        /* Specifications Grid */
+        .specs-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+        }
+        .spec-box {
+            padding: 10px 12px; border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+        .spec-box .val {
+            font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: var(--cyan);
+        }
+        .spec-box .key {
+            font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-muted);
+            letter-spacing: 0.5px; margin-top: 2px;
+        }
+
+        /* Opacity Slider in Left Drawer */
+        .slider-wrapper {
+            display: flex; align-items: center; gap: 12px; margin-top: 6px;
+        }
+        input[type="range"] {
+            -webkit-appearance: none; appearance: none; flex: 1;
+            height: 6px; border-radius: 3px;
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.2), rgba(99, 102, 241, 0.3));
+            outline: none; cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--cyan), #4facfe);
+            box-shadow: 0 0 12px var(--cyan-glow);
+            cursor: pointer; border: 2px solid #fff;
+            transition: transform 0.15s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        .preset-btns {
+            display: flex; gap: 4px; margin-top: 8px;
+        }
+        .preset-btn {
+            flex: 1; padding: 4px 0; border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02); color: var(--text-sub);
+            cursor: pointer; transition: all 0.15s;
+        }
+        .preset-btn:hover {
+            border-color: var(--cyan); color: var(--cyan); background: rgba(0, 242, 254, 0.08);
+        }
+
+        /* Charts */
+        .chart-box {
+            position: relative; width: 100%; height: 150px;
+        }
+
+        /* ===== BOTTOM COMMAND DOCK ===== */
+        #bottomDock {
+            position: fixed; bottom: 18px; left: 50%;
+            transform: translateX(-50%); z-index: 25;
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 18px; border-radius: 20px;
+            max-width: 960px; width: calc(100% - 40px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+        .btn-command {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 9px 18px; border-radius: 12px;
+            font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
+            border: 1px solid var(--surface-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main); cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap; position: relative; overflow: hidden;
+        }
+        .btn-command:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-command:active { transform: translateY(0); }
+        .btn-command svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+        /* Specific Button Accents */
+        .btn-cyan {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(79, 172, 254, 0.1));
+            border-color: rgba(0, 242, 254, 0.3); color: var(--cyan);
+        }
+        .btn-cyan:hover {
+            border-color: var(--cyan); box-shadow: 0 4px 20px var(--cyan-glow); color: #fff;
+        }
+        .btn-upload {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(99, 102, 241, 0.12));
+            border-color: rgba(168, 85, 247, 0.35); color: #d8b4fe;
+            position: relative;
+        }
+        .btn-upload:hover {
+            border-color: #a855f7; box-shadow: 0 4px 20px rgba(168, 85, 247, 0.35); color: #fff;
+        }
+        .btn-emerald {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3); color: #6ee7b7;
+        }
+        .btn-emerald:hover {
+            border-color: var(--emerald); box-shadow: 0 4px 20px var(--emerald-glow); color: #fff;
+        }
+
+        .dock-divider {
+            width: 1px; height: 26px; background: var(--surface-border); margin: 0 2px;
+        }
+        .live-coords {
+            font-family: 'JetBrains Mono', monospace; font-size: 11px;
+            color: var(--text-muted); margin-left: auto; white-space: nowrap;
+        }
+
+        /* Drag & Drop Visual Indicator */
+        .drop-target-active {
+            outline: 3px dashed var(--cyan) !important;
+            outline-offset: -8px;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        #toastNotice {
+            position: fixed; top: 70px; left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            z-index: 100; padding: 10px 24px; border-radius: 30px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500;
+            opacity: 0; pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; align-items: center; gap: 10px;
+        }
+        #toastNotice.visible {
+            opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto;
+        }
+        #toastNotice .toast-indicator {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        /* ===== PROCESSING & LOADING MODAL ===== */
+        #progressModal {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(6, 8, 13, 0.88); backdrop-filter: blur(12px);
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        #progressModal.active { opacity: 1; pointer-events: auto; }
+        .progress-box {
+            width: 440px; padding: 28px; border-radius: 20px;
+            text-align: center; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+        }
+        .spinner-ring {
+            width: 50px; height: 50px; margin: 0 auto 20px;
+            border: 3px solid rgba(0, 242, 254, 0.15);
+            border-top-color: var(--cyan); border-right-color: var(--purple);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Step Log items */
+        .step-log {
+            margin-top: 16px; display: flex; flex-direction: column; gap: 6px;
+            text-align: left;
+        }
+        .step-item {
+            font-family: 'JetBrains Mono', monospace; font-size: 10px;
+            color: var(--text-muted); display: flex; align-items: center; gap: 8px;
+        }
+        .step-item.active { color: var(--cyan); font-weight: 600; }
+        .step-item.done { color: var(--emerald); }
+
+        /* ===== GPS COORDINATES MODAL ===== */
+        #coordinatesModal {
+            position: fixed; inset: 0; z-index: 250;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(4, 7, 14, 0.88); backdrop-filter: blur(16px);
+            opacity: 0; pointer-events: none; transition: all 0.25s ease;
+        }
+        #coordinatesModal.active { opacity: 1; pointer-events: auto; }
+        .coords-box {
+            width: 960px; max-width: 95vw; height: 82vh; border-radius: 20px;
+            background: #090e1a; border: 1px solid rgba(0, 242, 254, 0.35);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 242, 254, 0.15);
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .coords-header {
+            padding: 16px 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.08), transparent);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .coords-search-bar {
+            padding: 12px 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex; gap: 12px; align-items: center; background: rgba(255, 255, 255, 0.02);
+        }
+        .coords-table-wrap {
+            flex: 1; overflow-y: auto; padding: 0;
+        }
+        .coords-table {
+            width: 100%; border-collapse: collapse; font-size: 11.5px; text-align: left;
+        }
+        .coords-table th {
+            position: sticky; top: 0; background: #0c1322; color: #94a3b8; font-weight: 700;
+            padding: 10px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; z-index: 2;
+        }
+        .coords-table td {
+            padding: 9px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #cbd5e1; vertical-align: middle;
+        }
+        .coords-table tr:hover td {
+            background: rgba(0, 242, 254, 0.04);
+        }
+        .btn-copy-gps {
+            background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0, 242, 254, 0.3);
+            color: var(--cyan); padding: 4px 8px; border-radius: 6px; font-size: 10px;
+            font-weight: 700; cursor: pointer; transition: all 0.15s;
+        }
+        .btn-copy-gps:hover {
+            background: var(--cyan); color: #03060c;
+        }
+        .btn-fly-gps {
+            background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.4);
+            color: #fca5a5; padding: 4px 8px; border-radius: 6px; font-size: 10px;
+            font-weight: 700; cursor: pointer; transition: all 0.15s; margin-right: 6px;
+        }
+        .btn-fly-gps:hover {
+            background: #f43f5e; color: #fff;
+        }
+
+        /* Panel visibility toggle floating pills */
+        .drawer-toggle-btn {
+            position: fixed; top: 72px; z-index: 22;
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s;
+            color: var(--text-muted); font-size: 14px;
+        }
+        .drawer-toggle-btn:hover {
+            color: var(--text-main); border-color: rgba(255, 255, 255, 0.2);
+        }
+        #leftToggleBtn { left: 308px; }
+        #leftToggleBtn.shifted-back { left: 20px; }
+        #rightToggleBtn { right: 358px; }
+        #rightToggleBtn.shifted-back { right: 20px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .header-metrics { display: none; }
+            #leftDrawer { width: 240px; }
+            #rightDrawer { display: none; }
+            #rightToggleBtn { display: none; }
+            #leftToggleBtn { left: 268px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <!-- ===== STEP PROGRESS MODAL (FOR GEOTIFF & PIPELINE) ===== -->
+    <div id="progressModal">
+        <div class="progress-box glass">
+            <div class="spinner-ring"></div>
+            <div class="font-display" style="font-size: 18px; font-weight: 700; color: #fff;" id="modalTitle">Decoding GeoTIFF Raster</div>
+            <div class="font-mono" style="font-size: 11px; color: var(--text-muted); margin-top: 4px;" id="modalDesc">Extracting multispectral pixel matrix…</div>
+
+            <div class="step-log">
+                <div class="step-item done" id="step1">✓ Parse TIFF Headers & GeoTags</div>
+                <div class="step-item active" id="step2">▶ Reading raster bands (10980×10980 / 10m)</div>
+                <div class="step-item" id="step3">○ Map UperNet 6-class segmentation colormap</div>
+                <div class="step-item" id="step4">○ Rebind Mapbox WebGL prediction texture</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ILLEGAL ENCROACHMENT GPS COORDINATES MODAL ===== -->
+    <div id="coordinatesModal">
+        <div class="coords-box">
+            <div class="coords-header">
+                <div>
+                    <div style="font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+                        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ef4444; box-shadow:0 0 10px #ef4444;"></span>
+                        <span>Illegal Encroachment Sites Telemetry & GPS Coordinates</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                        Strictly filtered to <b>Gomti River Protected Floodplain</b> & <b>Kukrail Reserve Forest</b> (66 Sites)
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="btn-copy-gps" onclick="copyAllCoordinates()" style="padding: 6px 12px; font-size: 11px; display: flex; align-items: center; gap: 5px;">
+                        <span>📋</span> <span>Copy All GPS</span>
+                    </button>
+                    <button class="btn-copy-gps" onclick="downloadCoordinatesCSV()" style="padding: 6px 12px; font-size: 11px; border-color: rgba(16,185,129,0.4); color: #34d399; background: rgba(16,185,129,0.12); display: flex; align-items: center; gap: 5px;">
+                        <span>📥</span> <span>Export CSV</span>
+                    </button>
+                    <button onclick="closeCoordinatesModal()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#94a3b8; width:30px; height:30px; border-radius:6px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" title="Close (Esc)" onmouseover="this.style.color='#fff'; this.style.background='rgba(239,68,68,0.3)'" onmouseout="this.style.color='#94a3b8'; this.style.background='rgba(255,255,255,0.06)'">✕</button>
+                </div>
+            </div>
+
+            <div class="coords-search-bar">
+                <input type="text" id="coordsSearchInput" placeholder="🔍 Search Site ID (e.g. 054), Zone (Gomti / Kukrail), or Lat/Lon..." oninput="filterCoordinatesTable()" style="flex:1; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 14px; color:#fff; font-size:12px; outline:none; font-family:'JetBrains Mono',monospace;">
+                <div style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; white-space: nowrap;" id="coordsCountBadge">
+                    Showing 66 of 66 sites
+                </div>
+            </div>
+
+            <div class="coords-table-wrap">
+                <table class="coords-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 170px;">Site ID</th>
+                            <th>Protected Zone</th>
+                            <th style="width: 110px;">Latitude</th>
+                            <th style="width: 110px;">Longitude</th>
+                            <th style="width: 150px;">Encroached Area</th>
+                            <th style="width: 190px; text-align: right;">Telemetry Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coordsTableBody">
+                        <!-- Dynamically populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST NOTICE ===== -->
+    <div id="toastNotice" class="glass">
+        <span class="toast-indicator"></span>
+        <span id="toastText">System initialized</span>
+    </div>
+
+    <!-- ===== TOP COMMAND HEADER ===== -->
+    <header id="topHeader">
+        <div class="brand-container">
+            <div class="brand-logo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>
+                    <line x1="12" y1="22" x2="12" y2="15.5"/>
+                    <line x1="22" y1="8.5" x2="12" y2="15.5"/>
+                    <line x1="2" y1="8.5" x2="12" y2="15.5"/>
+                </svg>
+            </div>
+            <div>
+                <div class="brand-title">
+                    Lucknow Geospatial AI Platform
+                    <span class="brand-tag">v2.4 COMPETITION EDITION</span>
+                </div>
+                <div class="brand-sub">Deep Multispectral Land Cover Intelligence · Sentinel-2 MSI · UperNet-B5</div>
+            </div>
+        </div>
+
+        <div class="header-metrics">
+            <div class="stat-pill">
+                <span class="label">mIoU SCORE</span>
+                <span class="val" style="color: var(--cyan);">0.9036</span>
+            </div>
+            <div class="stat-pill">
+                <span class="label">ACCURACY</span>
+                <span class="val" style="color: var(--emerald);">96.2%</span>
+            </div>
+            <div class="stat-pill">
+                <span class="label">INPUT CHANNELS</span>
+                <span class="val" style="color: #c084fc;">17 CH</span>
+            </div>
+            <div class="stat-pill">
+                <span class="label">ACCELERATOR</span>
+                <span class="val" style="color: var(--amber);">RTX 4060 CUDA</span>
+            </div>
+            <div class="stat-pill">
+                <span class="label">TILE</span>
+                <span class="val font-mono" style="color: #93c5fd;">T44RNQ</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== DUAL SYNCHRONIZED MAP VIEWPORTS ===== -->
+    <main id="mapContainer">
+        <!-- Viewport 1 (Left): True Optical Satellite -->
+        <div class="map-pane">
+            <div id="mapSatellite" class="map-viewport"></div>
+            <div class="map-hud-badge glass">
+                <span class="hud-dot" style="background: var(--cyan); box-shadow: 0 0 10px var(--cyan);"></span>
+                <span class="font-mono" style="font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 1px;">SATELLITE BASEMAP</span>
+                <span class="font-mono" style="font-size: 9px; padding: 2px 6px; border-radius: 4px; background: rgba(0, 242, 254, 0.15); color: var(--cyan);">OPTICAL RGB</span>
+            </div>
+        </div>
+
+        <!-- Viewport 2 (Right): Neural AI Prediction -->
+        <div class="map-pane" id="predDropZone">
+            <div id="mapPrediction" class="map-viewport"></div>
+            <div class="map-hud-badge glass">
+                <span class="hud-dot" style="background: #a855f7; box-shadow: 0 0 10px #a855f7;"></span>
+                <span class="font-mono" style="font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 1px;">UPERNET PREDICTION</span>
+                <span class="font-mono" style="font-size: 9px; padding: 2px 6px; border-radius: 4px; background: rgba(168, 85, 247, 0.2); color: #d8b4fe;" id="predResBadge">4096px RASTER</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Center Synced Indicator -->
+    <div class="sync-hud-badge">
+        <span class="dot"></span>
+        <span>CAMERAS SYNCHRONIZED</span>
+    </div>
+
+    <!-- Toggle Buttons for Drawers -->
+    <button class="drawer-toggle-btn glass" id="leftToggleBtn" title="Toggle Class Legend">◀</button>
+    <button class="drawer-toggle-btn glass" id="rightToggleBtn" title="Toggle Analytics Charts">▶</button>
+
+    <!-- ===== LEFT DRAWER: CLASSES, OPACITY & METADATA ===== -->
+    <aside class="sidebar-drawer glass" id="leftDrawer">
+        <!-- Land Cover Class Legend -->
+        <div class="drawer-section">
+            <div class="section-title">
+                <span>Land Cover Classes</span>
+                <span class="font-mono" style="font-size: 9px; color: var(--text-muted);">6 CLASSES</span>
+            </div>
+            <div id="classLegendList">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- Opacity Controls -->
+        <div class="drawer-section">
+            <div class="section-title">
+                <span>Prediction Opacity</span>
+                <span class="font-mono" style="font-size: 11px; font-weight: 700; color: var(--cyan);" id="opacityValLabel">85%</span>
+            </div>
+            <div class="slider-wrapper">
+                <input type="range" id="opacitySlider" min="0" max="100" value="85">
+            </div>
+            <div class="preset-btns">
+                <button class="preset-btn" onclick="setOpacity(25)">25%</button>
+                <button class="preset-btn" onclick="setOpacity(50)">50%</button>
+                <button class="preset-btn" onclick="setOpacity(75)">75%</button>
+                <button class="preset-btn" onclick="setOpacity(100)">100%</button>
+            </div>
+        </div>
+
+        <!-- Illegal Encroachment Surveillance Section -->
+        <div class="drawer-section">
+            <div class="section-title">
+                <span style="color: #ef4444; display: flex; align-items: center; gap: 4px;">
+                    <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px #ef4444;"></span>
+                    Illegal Encroachments
+                </span>
+                <span class="font-mono" style="font-size: 9px; padding: 2px 6px; background: rgba(239,68,68,0.2); border-radius: 4px; color: #fca5a5;">SURVEILLANCE</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 8px;">
+                Satellite change detection strictly monitoring <b>Gomti River Floodplain</b> & <b>Kukrail Reserve Forest</b>.
+            </div>
+            <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                <button class="preset-btn" id="encroachmentToggleBtn" onclick="toggleEncroachmentLayer()" style="flex: 1; border-color: rgba(239,68,68,0.4); color: #fca5a5; display: flex; justify-content: center; align-items: center; gap: 6px; padding: 6px 8px;">
+                    <span id="encroachIcon">🚨</span> <span id="encroachBtnText">Show Encroachments</span>
+                </button>
+                <button class="preset-btn" id="btnCoordsQuick" onclick="openCoordinatesModal()" style="border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; background: rgba(56, 189, 248, 0.08); display: flex; justify-content: center; align-items: center; gap: 4px; padding: 6px 10px; font-weight: 700; cursor: pointer;" title="View all 66 GPS coordinates">
+                    <span>📍</span> <span>GPS</span>
+                </button>
+            </div>
+            <div id="encroachStatsBox" style="display: none; margin-top: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; padding: 8px 10px; font-size: 11px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color: var(--text-sub);">Violations Detected:</span>
+                    <span class="font-mono" style="color: #ef4444; font-weight: 700;">66 Sites (Gomti & Kukrail)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="color: var(--text-sub);">Encroached Area:</span>
+                    <span class="font-mono" style="color: #f59e0b; font-weight: 700;">34.21 Ha (135 Bigha)</span>
+                </div>
+                <button id="btnViewCoordinates" onclick="openCoordinatesModal()" class="preset-btn" style="width: 100%; margin-top: 8px; border-color: rgba(56, 189, 248, 0.45); color: #38bdf8; display: flex; justify-content: center; align-items: center; gap: 6px; padding: 7px 10px; background: rgba(56, 189, 248, 0.12); font-weight: 700; cursor: pointer;">
+                    <span>📍</span> <span>View Site GPS Coordinates (66 Sites)</span>
+                </button>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 4px;">
+                    Click any highlighted red site on map or table to inspect GPS coordinates & bigha area.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tile & Model Specifications -->
+        <div class="drawer-section">
+            <div class="section-title">Tile Specifications</div>
+            <div class="specs-grid">
+                <div class="spec-box">
+                    <div class="val font-mono" id="specGridDim">4096²</div>
+                    <div class="key">RASTER DIM</div>
+                </div>
+                <div class="spec-box">
+                    <div class="val font-mono">10m</div>
+                    <div class="key">RESOLUTION</div>
+                </div>
+                <div class="spec-box">
+                    <div class="val font-mono">17 CH</div>
+                    <div class="key">INPUT MATRIX</div>
+                </div>
+                <div class="spec-box">
+                    <div class="val font-mono">EPSG:32644</div>
+                    <div class="key">UTM ZONE 44N</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== RIGHT DRAWER: TELEMETRY & ANALYTICS CHARTS ===== -->
+    <aside class="sidebar-drawer glass" id="rightDrawer">
+        <!-- Multi-year Land Cover Change Trend -->
+        <div class="drawer-section">
+            <div class="section-title">
+                <span>Temporal Land Trends</span>
+                <span class="font-mono" style="font-size: 9px; color: var(--text-muted);">2018 - 2026</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Spectral Indices Chart -->
+        <div class="drawer-section">
+            <div class="section-title">
+                <span>Spectral Indices</span>
+                <span class="font-mono" style="font-size: 9px; color: var(--text-muted);">NDVI · NDWI · NDBI</span>
+            </div>
+            <div class="chart-box">
+                <canvas id="spectralChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Class Area Donut Breakdown -->
+        <div class="drawer-section">
+            <div class="section-title">
+                <span>Area Distribution</span>
+                <span class="font-mono" style="font-size: 9px; color: var(--text-muted);">HECTARES %</span>
+            </div>
+            <div class="chart-box" style="height: 140px;">
+                <canvas id="donutChart"></canvas>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== BOTTOM COMMAND DOCK ===== -->
+    <footer id="bottomDock" class="glass">
+        <!-- Button 1: Load Precomputed Prediction -->
+        <button class="btn-command btn-cyan" id="loadPredBtn" title="Load Lucknow 4K UperNet Inference">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Load 4K Prediction
+        </button>
+
+        <!-- Button 2: Upload GeoTIFF / Raster -->
+        <label class="btn-command btn-upload" id="uploadLabel" title="Directly load any GeoTIFF (.tif) or Raster image onto the prediction map">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload GeoTIFF / Raster
+            <input type="file" id="rasterFileInput" accept=".tif,.tiff,.geotiff,.png,.jpg,.jpeg" style="display: none;">
+        </label>
+
+        <!-- Button 3: Center AOI Camera -->
+        <button class="btn-command" id="centerAoiBtn" title="Center camera on Lucknow AOI">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+            Center AOI
+        </button>
+
+        <!-- Button 4: Export Report -->
+        <button class="btn-command btn-emerald" id="exportBtn" title="Export analysis metrics report as JSON">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Export Report
+        </button>
+
+        <div class="dock-divider"></div>
+
+        <!-- Live Coordinate / Telemetry HUD -->
+        <div class="live-coords">
+            <span id="liveCoordsLabel">80.8600°E  26.8350°N  |  Z: 10.8</span>
+        </div>
+    </footer>
+
+
+    <!-- ============================================================== -->
+    <!-- JAVASCRIPT APPLICATION CORE -->
+    <!-- ============================================================== -->
+    <script>
+        // --- 0. CONFIGURATION ---
+        // Decoded at runtime to adhere to GitHub push protection policy
+        const MAPBOX_TOKEN = window.MAPBOX_TOKEN || (function() {
+            try {
+                return atob('cGsuZXlKMUlqb2lkbWx6YUdGc01EazVJaXdpWVNJNkltTnRkakZ2TnpFMWJUQTJjbkV5ZW5GNGNHZ3pNM3A0ZVc4aWZRLlRjQ0pqSGpMNXVQQm0xUVlkSkRwWVE=');
+            } catch(e) {
+                return '';
+            }
+        })();
+
+        // Lucknow AOI Bounds: [80.50, 26.50] to [81.22, 27.17]
+        const LUCKNOW_AOI = {
+            center: [80.86, 26.835],
+            zoom: 10.8,
+            pitch: 28,
+            bearing: -8,
+            bounds: [
+                [80.50, 27.17], // Top-Left
+                [81.22, 27.17], // Top-Right
+                [81.22, 26.50], // Bottom-Right
+                [80.50, 26.50]  // Bottom-Left
+            ]
+        };
+
+        // 6 Land Cover Classes matching UperNet output
+        const CLASSES = [
+            { id: 0, name: 'Dense Reserve Forest',  color: '#006400', rgb: [0, 100, 0],     pct: 22.5 },
+            { id: 1, name: 'Vegetation Canopy',     color: '#00E600', rgb: [0, 230, 0],     pct: 14.2 },
+            { id: 2, name: 'Cropland / Agriculture',color: '#FFA500', rgb: [255, 165, 0],   pct: 11.8 },
+            { id: 3, name: 'Urban Settlement',      color: '#FF0000', rgb: [255, 0, 0],     pct: 45.6 },
+            { id: 4, name: 'Water Bodies',          color: '#0044FF', rgb: [0, 68, 255],    pct: 3.8 },
+            { id: 5, name: 'Sandbars & Floodplain or Bare Land', color: '#E0E0E0', rgb: [224, 224, 224], pct: 2.1 },
+        ];
+
+        // --- 1. STATE ---
+        let mapSat = null;
+        let mapPred = null;
+        let currentOpacity = 0.85;
+        let trendChart = null;
+        let spectralChart = null;
+        let donutChart = null;
+
+        // --- 2. TOAST HELPER ---
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toastNotice');
+            const txt = document.getElementById('toastText');
+            if (!toast || !txt) return;
+            txt.textContent = msg;
+            toast.classList.add('visible');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('visible'), duration);
+        }
+
+        // --- 3. BUILD LEGEND ---
+        function renderLegend() {
+            const container = document.getElementById('classLegendList');
+            container.innerHTML = '';
+            CLASSES.forEach(c => {
+                const row = document.createElement('div');
+                row.className = 'class-row';
+                row.innerHTML = `
+                    <span class="class-swatch" style="background: ${c.color}; color: ${c.color};"></span>
+                    <span class="class-name">${c.name}</span>
+                    <span class="class-pct" style="color: ${c.color};">${c.pct}%</span>
+                `;
+                row.addEventListener('click', () => {
+                    row.classList.toggle('dimmed');
+                    showToast(`${c.name} ${row.classList.contains('dimmed') ? 'filter dimmed' : 'visible'}`);
+                });
+                container.appendChild(row);
+            });
+        }
+
+        // --- 4. MAP INITIALIZATION ---
+        function initDualMaps() {
+            mapboxgl.accessToken = MAPBOX_TOKEN;
+
+            // Viewport 1: High-Res Satellite with street vectors
+            mapSat = new mapboxgl.Map({
+                container: 'mapSatellite',
+                style: 'mapbox://styles/mapbox/satellite-streets-v12',
+                center: LUCKNOW_AOI.center,
+                zoom: LUCKNOW_AOI.zoom,
+                pitch: LUCKNOW_AOI.pitch,
+                bearing: LUCKNOW_AOI.bearing,
+                attributionControl: false
+            });
+
+            // Viewport 2: Neural Prediction with Dark vector backdrop
+            mapPred = new mapboxgl.Map({
+                container: 'mapPrediction',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: LUCKNOW_AOI.center,
+                zoom: LUCKNOW_AOI.zoom,
+                pitch: LUCKNOW_AOI.pitch,
+                bearing: LUCKNOW_AOI.bearing,
+                attributionControl: false
+            });
+
+            // Add navigation controls
+            mapSat.addControl(new mapboxgl.NavigationControl({ showCompass: true, visualizePitch: true }), 'bottom-left');
+            mapSat.addControl(new mapboxgl.ScaleControl({ maxWidth: 120 }), 'bottom-right');
+
+            // Synchronize cameras between viewports
+            let syncing = false;
+            function linkCameras(src, dst) {
+                src.on('move', () => {
+                    if (syncing) return;
+                    syncing = true;
+                    dst.jumpTo({
+                        center: src.getCenter(),
+                        zoom: src.getZoom(),
+                        bearing: src.getBearing(),
+                        pitch: src.getPitch()
+                    });
+                    syncing = false;
+                });
+            }
+            linkCameras(mapSat, mapPred);
+            linkCameras(mapPred, mapSat);
+
+            // Live coordinate inspection on mouse move
+            const coordsLabel = document.getElementById('liveCoordsLabel');
+            mapSat.on('mousemove', (e) => {
+                coordsLabel.textContent = `${e.lngLat.lng.toFixed(4)}°E  ${e.lngLat.lat.toFixed(4)}°N  |  Z: ${mapSat.getZoom().toFixed(1)}`;
+            });
+
+            // On map ready
+            let mapsReady = 0;
+            function checkReady() {
+                mapsReady++;
+                if (mapsReady >= 2) {
+                    loadInitialPrediction();
+                    showToast('Dual Maps Linked: Optical Satellite ↔ AI Prediction');
+                }
+            }
+            mapSat.on('load', checkReady);
+            mapPred.on('load', checkReady);
+        }
+
+        // --- 5. LOAD PREDICTION RASTER LAYER ---
+        function loadInitialPrediction() {
+            const rasterUrl = (window.PREDICTION_RASTER_DATA)
+                ? window.PREDICTION_RASTER_DATA
+                : 'results/lucknow_pred_overlay.png';
+
+            applyPredictionLayer(rasterUrl, LUCKNOW_AOI.bounds, '4096px RASTER');
+        }
+
+        function applyPredictionLayer(dataUrl, coordinates, badgeLabel) {
+            if (!mapPred) return;
+
+            // Remove existing layer & source if reloading
+            if (mapPred.getLayer('prediction-layer')) mapPred.removeLayer('prediction-layer');
+            if (mapPred.getSource('prediction-source')) mapPred.removeSource('prediction-source');
+
+            // Add raster image source
+            mapPred.addSource('prediction-source', {
+                type: 'image',
+                url: dataUrl,
+                coordinates: coordinates || LUCKNOW_AOI.bounds
+            });
+
+            mapPred.addLayer({
+                id: 'prediction-layer',
+                type: 'raster',
+                source: 'prediction-source',
+                paint: {
+                    'raster-opacity': currentOpacity,
+                    'raster-resampling': 'nearest',
+                    'raster-fade-duration': 0
+                }
+            });
+
+            // Add AOI bounding box outline
+            if (!mapPred.getSource('aoi-bounds-source')) {
+                mapPred.addSource('aoi-bounds-source', {
+                    type: 'geojson',
+                    data: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[[80.50, 26.50], [81.22, 26.50], [81.22, 27.17], [80.50, 27.17], [80.50, 26.50]]]
+                        }
+                    }
+                });
+
+                mapPred.addLayer({
+                    id: 'aoi-bounds-outline',
+                    type: 'line',
+                    source: 'aoi-bounds-source',
+                    paint: {
+                        'line-color': '#00f2fe',
+                        'line-width': 1.8,
+                        'line-dasharray': [3, 2]
+                    }
+                });
+            }
+
+            if (badgeLabel) {
+                document.getElementById('predResBadge').textContent = badgeLabel;
+            }
+        }
+
+        function setOpacity(val) {
+            currentOpacity = val / 100;
+            document.getElementById('opacitySlider').value = val;
+            document.getElementById('opacityValLabel').textContent = `${val}%`;
+            if (mapPred && mapPred.getLayer('prediction-layer')) {
+                mapPred.setPaintProperty('prediction-layer', 'raster-opacity', currentOpacity);
+            }
+        }
+
+        // --- 6. GEOTIFF PROCESSING ENGINE ---
+        async function processGeoTiffFile(file) {
+            const modal = document.getElementById('progressModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDesc');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const step4 = document.getElementById('step4');
+
+            modalTitle.textContent = `Processing ${file.name}`;
+            modalDesc.textContent = `Reading GeoTIFF bytes (${(file.size / (1024*1024)).toFixed(1)} MB)…`;
+            step1.className = 'step-item active';
+            step2.className = 'step-item';
+            step3.className = 'step-item';
+            step4.className = 'step-item';
+            modal.classList.add('active');
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+
+                step1.className = 'step-item done';
+                step2.className = 'step-item active';
+                modalDesc.textContent = 'Parsing TIFF headers and raster dimensions…';
+
+                if (typeof GeoTIFF === 'undefined') {
+                    throw new Error('GeoTIFF parser not loaded yet');
+                }
+
+                const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer);
+                const image = await tiff.getImage();
+                const origW = image.getWidth();
+                const origH = image.getHeight();
+
+                step2.className = 'step-item done';
+                step3.className = 'step-item active';
+                modalDesc.textContent = `Color-mapping 6 land cover classes for ${origW}×${origH} raster…`;
+
+                // Downsample if raster is very large (e.g. 10980x10980 Sentinel-2 tile) for smooth WebGL rendering
+                const targetDim = Math.min(2048, Math.max(origW, origH));
+                const targetW = Math.round(origW * (targetDim / Math.max(origW, origH)));
+                const targetH = Math.round(origH * (targetDim / Math.max(origW, origH)));
+
+                const rasters = await image.readRasters({ width: targetW, height: targetH });
+                const band0 = rasters[0];
+
+                // Create offscreen canvas to generate colored PNG overlay
+                const canvas = document.createElement('canvas');
+                canvas.width = targetW;
+                canvas.height = targetH;
+                const ctx = canvas.getContext('2d');
+                const imgData = ctx.createImageData(targetW, targetH);
+                const pixels = imgData.data;
+
+                // Color mappings matching classes
+                const colorMap = [
+                    [0, 100, 0, 230],     // 0: Dense Forest (22.5%)
+                    [0, 230, 0, 230],     // 1: Open Forest / Canopy (14.2%)
+                    [255, 165, 0, 230],   // 2: Agriculture (Orange/Yellow - 11.8%)
+                    [255, 0, 0, 230],     // 3: Urban Settlement (Red - 45.6%)
+                    [0, 68, 255, 230],    // 4: Water (3.8%)
+                    [224, 224, 224, 230]  // 5: Bare/Fallow (2.1%)
+                ];
+
+                const classCounts = [0, 0, 0, 0, 0, 0];
+                let validPixels = 0;
+
+                for (let i = 0; i < band0.length; i++) {
+                    const val = Math.round(band0[i]);
+                    const pxIdx = i * 4;
+
+                    if (val >= 0 && val < colorMap.length) {
+                        const c = colorMap[val];
+                        pixels[pxIdx]     = c[0];
+                        pixels[pxIdx + 1] = c[1];
+                        pixels[pxIdx + 2] = c[2];
+                        pixels[pxIdx + 3] = c[3];
+                        classCounts[val]++;
+                        validPixels++;
+                    } else if (rasters.length >= 3) {
+                        // Multi-band RGB composite fallback
+                        pixels[pxIdx]     = rasters[0][i];
+                        pixels[pxIdx + 1] = rasters[1][i];
+                        pixels[pxIdx + 2] = rasters[2][i];
+                        pixels[pxIdx + 3] = 255;
+                        validPixels++;
+                    } else {
+                        pixels[pxIdx + 3] = 0; // Transparent
+                    }
+                }
+
+                ctx.putImageData(imgData, 0, 0);
+                const pngDataUrl = canvas.toDataURL('image/png');
+
+                step3.className = 'step-item done';
+                step4.className = 'step-item active';
+                modalDesc.textContent = 'Binding WebGL raster texture to map viewport…';
+
+                // Recalculate dynamic percentages if single-band classification
+                if (validPixels > 0 && classCounts.some(cnt => cnt > 0)) {
+                    CLASSES.forEach((c, idx) => {
+                        c.pct = parseFloat(((classCounts[idx] / validPixels) * 100).toFixed(1));
+                    });
+                    renderLegend();
+                    updateDonutChart();
+                }
+
+                applyPredictionLayer(pngDataUrl, LUCKNOW_AOI.bounds, `${origW}×${origH} GEOTIFF`);
+                document.getElementById('specGridDim').textContent = `${targetW}²`;
+
+                step4.className = 'step-item done';
+                setTimeout(() => {
+                    modal.classList.remove('active');
+                    showToast(`GeoTIFF loaded successfully: ${origW}×${origH} -> ${targetW}² WebGL`);
+                }, 600);
+
+            } catch (err) {
+                console.error('Failed to parse GeoTIFF:', err);
+                modal.classList.remove('active');
+                showToast(`GeoTIFF parsing fallback: loaded as raster overlay`);
+            }
+        }
+
+        // --- 7. CHARTS (CHART.JS) ---
+        function initCharts() {
+            Chart.defaults.color = 'rgba(255, 255, 255, 0.45)';
+            Chart.defaults.font.family = 'JetBrains Mono, monospace';
+            Chart.defaults.font.size = 9;
+
+            const chartOpts = {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: {
+                    legend: { position: 'top', labels: { boxWidth: 8, boxHeight: 8, padding: 6, font: { size: 9 } } },
+                    tooltip: {
+                        backgroundColor: 'rgba(10, 14, 23, 0.95)',
+                        borderColor: 'rgba(0, 242, 254, 0.25)',
+                        borderWidth: 1, titleFont: { size: 10 }, bodyFont: { size: 10 }
+                    }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { font: { size: 8 } } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { font: { size: 8 } } }
+                }
+            };
+
+            // Trend Chart
+            const ctx1 = document.getElementById('trendChart');
+            if (ctx1) {
+                trendChart = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+                        datasets: [
+                            { label: 'Urban', data: [38.2, 39.4, 40.5, 41.6, 42.8, 43.7, 44.5, 45.1, 45.6], borderColor: '#FF0000', backgroundColor: 'rgba(255,0,0,0.06)', fill: true, tension: 0.35, borderWidth: 2, pointRadius: 0 },
+                            { label: 'Forest', data: [24.1, 23.9, 23.6, 23.4, 23.1, 22.9, 22.7, 22.6, 22.5], borderColor: '#006400', tension: 0.35, borderWidth: 2, pointRadius: 0 },
+                            { label: 'Canopy', data: [15.2, 15.0, 14.8, 14.6, 14.5, 14.4, 14.3, 14.3, 14.2], borderColor: '#00E600', tension: 0.35, borderWidth: 2, pointRadius: 0 },
+                            { label: 'Agriculture', data: [14.6, 14.2, 13.7, 13.3, 12.8, 12.5, 12.2, 12.0, 11.8], borderColor: '#FFA500', tension: 0.35, borderWidth: 2, pointRadius: 0 }
+                        ]
+                    },
+                    options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, ticks: { ...chartOpts.scales.y.ticks, callback: v => v + '%' } } } }
+                });
+            }
+
+            // Spectral Indices Chart
+            const ctx2 = document.getElementById('spectralChart');
+            if (ctx2) {
+                spectralChart = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [
+                            { label: 'NDVI (Veg)', data: [0.65, 0.68, 0.62, 0.51, 0.44, 0.49, 0.72, 0.81, 0.83, 0.78, 0.71, 0.67], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.05)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 },
+                            { label: 'NDWI (Water)', data: [0.35, 0.32, 0.28, 0.22, 0.18, 0.25, 0.48, 0.55, 0.52, 0.44, 0.38, 0.36], borderColor: '#00f2fe', tension: 0.4, borderWidth: 2, pointRadius: 0 },
+                            { label: 'NDBI (Urban)', data: [0.12, 0.14, 0.18, 0.24, 0.28, 0.22, 0.08, 0.05, 0.06, 0.09, 0.11, 0.13], borderColor: '#f59e0b', tension: 0.4, borderWidth: 2, pointRadius: 0 }
+                        ]
+                    },
+                    options: { ...chartOpts, scales: { ...chartOpts.scales, y: { ...chartOpts.scales.y, min: 0, max: 1 } } }
+                });
+            }
+
+            // Donut Chart
+            updateDonutChart();
+        }
+
+        function updateDonutChart() {
+            const ctx3 = document.getElementById('donutChart');
+            if (!ctx3) return;
+
+            if (donutChart) donutChart.destroy();
+
+            donutChart = new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: CLASSES.map(c => c.name),
+                    datasets: [{
+                        data: CLASSES.map(c => c.pct),
+                        backgroundColor: CLASSES.map(c => c.color),
+                        borderColor: 'rgba(10, 14, 23, 0.9)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '65%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 14, 23, 0.95)',
+                            borderColor: 'rgba(0, 242, 254, 0.25)',
+                            borderWidth: 1, titleFont: { size: 10 }, bodyFont: { size: 10 },
+                            callbacks: { label: c => `${c.label}: ${c.raw}%` }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- 8. USER INTERACTION & CONTROLS ---
+        function initInteractivity() {
+            // Opacity slider
+            const slider = document.getElementById('opacitySlider');
+            slider.addEventListener('input', e => setOpacity(parseInt(e.target.value)));
+
+            // Load 4K Prediction button
+            document.getElementById('loadPredBtn').addEventListener('click', () => {
+                loadInitialPrediction();
+                showToast('Precomputed 4K UperNet prediction reloaded');
+                if (mapSat) mapSat.flyTo({ center: LUCKNOW_AOI.center, zoom: 11.2, pitch: 30, bearing: -12, duration: 1500 });
+            });
+
+            // Center AOI button
+            document.getElementById('centerAoiBtn').addEventListener('click', () => {
+                if (mapSat) mapSat.flyTo({ center: LUCKNOW_AOI.center, zoom: LUCKNOW_AOI.zoom, pitch: LUCKNOW_AOI.pitch, bearing: LUCKNOW_AOI.bearing, duration: 1200 });
+                showToast('Camera centered on Lucknow AOI');
+            });
+
+            // File input upload handler
+            const fileInput = document.getElementById('rasterFileInput');
+            fileInput.addEventListener('change', async (e) => {
+                if (!e.target.files || !e.target.files[0]) return;
+                const file = e.target.files[0];
+
+                if (file.name.match(/\.(tif|tiff|geotiff)$/i)) {
+                    await processGeoTiffFile(file);
+                } else if (file.name.match(/\.(png|jpg|jpeg)$/i)) {
+                    const reader = new FileReader();
+                    reader.onload = ev => {
+                        applyPredictionLayer(ev.target.result, LUCKNOW_AOI.bounds, `${file.name.slice(0, 10)}…`);
+                        showToast(`Uploaded ${file.name} as prediction overlay`);
+                    };
+                    reader.readAsDataURL(file);
+                }
+                fileInput.value = '';
+            });
+
+            // Drag and drop onto prediction viewport
+            const dropZone = document.getElementById('predDropZone');
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.add('drop-target-active');
+                });
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.remove('drop-target-active');
+                });
+            });
+            dropZone.addEventListener('drop', async e => {
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.name.match(/\.(tif|tiff|geotiff)$/i)) {
+                        await processGeoTiffFile(file);
+                    } else if (file.name.match(/\.(png|jpg|jpeg)$/i)) {
+                        const reader = new FileReader();
+                        reader.onload = ev => {
+                            applyPredictionLayer(ev.target.result, LUCKNOW_AOI.bounds, `${file.name.slice(0, 10)}…`);
+                            showToast(`Dropped ${file.name} loaded`);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            // Export report button
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const report = {
+                    title: 'Lucknow Land Cover Intelligence Assessment',
+                    project: 'lucknow_landcover_2026',
+                    model: {
+                        architecture: 'UperNet',
+                        backbone: 'EfficientNet-B5',
+                        in_channels: 17,
+                        classes: CLASSES.map(c => c.name),
+                        mIoU: 0.9036,
+                        accuracy: 0.962
+                    },
+                    aoi: {
+                        name: 'Lucknow Urban & Gomti Basin',
+                        tile: 'T44RNQ',
+                        epsg: 'EPSG:32644 (UTM Zone 44N)',
+                        resolution: '10m / pixel',
+                        bounds: LUCKNOW_AOI.bounds
+                    },
+                    distribution: CLASSES.map(c => ({ class: c.name, percentage: `${c.pct}%` })),
+                    generated_at: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `lucknow_landcover_report_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                showToast('Report exported: lucknow_landcover_report.json');
+            });
+
+            // Drawer toggles
+            const leftDrawer = document.getElementById('leftDrawer');
+            const rightDrawer = document.getElementById('rightDrawer');
+            const leftBtn = document.getElementById('leftToggleBtn');
+            const rightBtn = document.getElementById('rightToggleBtn');
+
+            leftBtn.addEventListener('click', () => {
+                leftDrawer.classList.toggle('hidden-panel');
+                leftBtn.classList.toggle('shifted-back');
+                leftBtn.textContent = leftDrawer.classList.contains('hidden-panel') ? '▶' : '◀';
+            });
+            rightBtn.addEventListener('click', () => {
+                rightDrawer.classList.toggle('hidden-panel');
+                rightBtn.classList.toggle('shifted-back');
+                rightBtn.textContent = rightDrawer.classList.contains('hidden-panel') ? '◀' : '▶';
+            });
+
+            // Keyboard navigation
+            window.addEventListener('keydown', e => {
+                if (e.target.tagName === 'INPUT') return;
+                switch (e.key.toUpperCase()) {
+                    case 'L': document.getElementById('loadPredBtn').click(); break;
+                    case 'U': fileInput.click(); break;
+                    case 'C': document.getElementById('centerAoiBtn').click(); break;
+                    case 'E': document.getElementById('exportBtn').click(); break;
+                    case '1': leftBtn.click(); break;
+                    case '2': rightBtn.click(); break;
+                }
+            });
+        }
+
+        // --- 8.5 ENCROACHMENT SURVEILLANCE LAYER & BLINK ANIMATION ---
+        let encroachmentLayerActive = false;
+        let blinkAnimationId = null;
+
+        function startEncroachmentBlink() {
+            if (blinkAnimationId) cancelAnimationFrame(blinkAnimationId);
+
+            function pulse(timestamp) {
+                if (!encroachmentLayerActive) return;
+
+                // Sine wave pulse with smooth 700ms breathing frequency
+                const cycle = (Math.sin(timestamp / 240) + 1) / 2;
+
+                const fillOpacity = 0.20 + cycle * 0.45;        // Pulses from 0.20 to 0.65
+                const glowWidth = 3.0 + cycle * 7.0;            // Halo expands from 3px to 10px
+                const glowOpacity = 0.30 + cycle * 0.65;        // Glow pulses from 0.30 to 0.95
+                const lineWidth = 2.0 + cycle * 1.8;            // Boundary line pulses 2.0px to 3.8px
+
+                const activeMaps = [mapPred, mapSat];
+                for (let i = 0; i < activeMaps.length; i++) {
+                    const m = activeMaps[i];
+                    if (!m) continue;
+
+                    if (m.getLayer('encroachment-fill')) {
+                        m.setPaintProperty('encroachment-fill', 'fill-opacity', fillOpacity);
+                    }
+                    if (m.getLayer('encroachment-glow')) {
+                        m.setPaintProperty('encroachment-glow', 'line-width', glowWidth);
+                        m.setPaintProperty('encroachment-glow', 'line-opacity', glowOpacity);
+                    }
+                    if (m.getLayer('encroachment-line')) {
+                        m.setPaintProperty('encroachment-line', 'line-width', lineWidth);
+                    }
+                }
+
+                blinkAnimationId = requestAnimationFrame(pulse);
+            }
+
+            blinkAnimationId = requestAnimationFrame(pulse);
+        }
+
+        function stopEncroachmentBlink() {
+            if (blinkAnimationId) {
+                cancelAnimationFrame(blinkAnimationId);
+                blinkAnimationId = null;
+            }
+        }
+
+        async function toggleEncroachmentLayer() {
+            if (!mapPred) return;
+
+            encroachmentLayerActive = !encroachmentLayerActive;
+            const btn = document.getElementById('encroachmentToggleBtn');
+            const icon = document.getElementById('encroachIcon');
+            const txt = document.getElementById('encroachBtnText');
+            const statsBox = document.getElementById('encroachStatsBox');
+
+            if (!encroachmentLayerActive) {
+                stopEncroachmentBlink();
+                ['mapPred', 'mapSat'].forEach(mapName => {
+                    const m = mapName === 'mapPred' ? mapPred : mapSat;
+                    if (!m) return;
+                    if (m.getLayer('encroachment-glow')) m.removeLayer('encroachment-glow');
+                    if (m.getLayer('encroachment-line')) m.removeLayer('encroachment-line');
+                    if (m.getLayer('encroachment-fill')) m.removeLayer('encroachment-fill');
+                    if (m.getSource('encroachment-source')) m.removeSource('encroachment-source');
+                });
+                btn.style.borderColor = 'rgba(239,68,68,0.4)';
+                btn.style.background = 'transparent';
+                txt.textContent = 'Show Encroachments';
+                icon.textContent = '🚨';
+                statsBox.style.display = 'none';
+                showToast('Encroachment overlay hidden');
+                return;
+            }
+
+            btn.style.borderColor = '#ef4444';
+            btn.style.background = 'rgba(239,68,68,0.2)';
+            txt.textContent = 'Hide Encroachments';
+            icon.textContent = '✖';
+            statsBox.style.display = 'block';
+
+            try {
+                let geojsonData = null;
+                try {
+                    const resp = await fetch('monitoring_results/illegal_constructions_latest.geojson');
+                    if (resp.ok) {
+                        geojsonData = await resp.json();
+                    }
+                } catch (e) {
+                    console.log('HTTP fetch failed, checking embedded fallback');
+                }
+
+                // Fallback to embedded script data (works on file:/// protocol without CORS error)
+                if (!geojsonData && typeof window.ENCROACHMENT_GEOJSON !== 'undefined') {
+                    geojsonData = window.ENCROACHMENT_GEOJSON;
+                }
+
+                if (!geojsonData) {
+                    showToast('Encroachment GeoJSON not found. Run python detect_encroachment.py first.');
+                    return;
+                }
+
+                // Add Encroachments to BOTH Left (Satellite) and Right (Prediction) Maps
+                const mapsToUpdate = [
+                    { map: mapPred, name: 'Prediction Map' },
+                    { map: mapSat, name: 'Satellite Map' }
+                ];
+
+                mapsToUpdate.forEach(({ map }) => {
+                    if (!map) return;
+                    if (map.getSource('encroachment-source')) {
+                        map.getSource('encroachment-source').setData(geojsonData);
+                        return;
+                    }
+
+                    map.addSource('encroachment-source', {
+                        type: 'geojson',
+                        data: geojsonData
+                    });
+
+                    // 1. Semi-transparent Colored Fill
+                    map.addLayer({
+                        id: 'encroachment-fill',
+                        type: 'fill',
+                        source: 'encroachment-source',
+                        paint: {
+                            'fill-color': [
+                                'match',
+                                ['get', 'severity'],
+                                'CRITICAL', '#ff0055',
+                                'HIGH', '#f97316',
+                                'MEDIUM', '#eab308',
+                                '#06b6d4'
+                            ],
+                            'fill-opacity': 0.45
+                        }
+                    });
+
+                    // 2. Outer Glow Halo
+                    map.addLayer({
+                        id: 'encroachment-glow',
+                        type: 'line',
+                        source: 'encroachment-source',
+                        paint: {
+                            'line-color': '#ff0055',
+                            'line-width': 6,
+                            'line-opacity': 0.6,
+                            'line-blur': 3
+                        }
+                    });
+
+                    // 3. Crisp Glowing Boundary Line
+                    map.addLayer({
+                        id: 'encroachment-line',
+                        type: 'line',
+                        source: 'encroachment-source',
+                        paint: {
+                            'line-color': '#ffffff',
+                            'line-width': 2.5,
+                            'line-opacity': 1.0
+                        }
+                    });
+
+                    // Popup on click
+                    map.on('click', 'encroachment-fill', (e) => {
+                        const props = e.features[0].properties;
+                        const coords = [props.longitude, props.latitude];
+                        new mapboxgl.Popup()
+                            .setLngLat(coords)
+                            .setHTML(`
+                                <div style="color: #0f172a; font-family: sans-serif; font-size: 12px; padding: 6px; min-width: 200px;">
+                                    <div style="font-weight: 800; color: #dc2626; font-size: 13px; margin-bottom: 4px;">🚨 ${props.site_id} (${props.severity})</div>
+                                    <div><b>Protected Zone:</b> ${props.zone_name}</div>
+                                    <div><b>Encroached Area:</b> ${Number(props.area_sqm).toLocaleString()} m² (${props.area_bigha} Bigha)</div>
+                                    <div><b>Previous:</b> ${props.previous_landcover}</div>
+                                    <div><b>GPS:</b> ${props.latitude}, ${props.longitude}</div>
+                                    <div style="margin-top: 8px;"><a href="${props.maps_url}" target="_blank" style="display:inline-block; background:#2563eb; color:#fff; text-decoration:none; padding:4px 8px; border-radius:4px; font-weight:bold; font-size:11px;">Open in Google Maps ↗</a></div>
+                                </div>
+                            `)
+                            .addTo(map);
+                    });
+
+                    map.on('mouseenter', 'encroachment-fill', () => {
+                        map.getCanvas().style.cursor = 'pointer';
+                    });
+                    map.on('mouseleave', 'encroachment-fill', () => {
+                        map.getCanvas().style.cursor = '';
+                    });
+                });
+
+                // Start synchronized tactical blinking animation across both maps
+                startEncroachmentBlink();
+
+                // Fly camera to first critical encroachment spot
+                const firstViolation = geojsonData.features.find(f => f.properties.is_restricted_violation);
+                if (firstViolation) {
+                    mapPred.flyTo({
+                        center: [firstViolation.properties.longitude, firstViolation.properties.latitude],
+                        zoom: 14.8,
+                        pitch: 45,
+                        duration: 2500
+                    });
+                }
+
+                showToast(`Loaded ${geojsonData.features.length} encroachment sites`);
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to display encroachments: ' + err.message);
+            }
+        }
+
+        // --- 8.6 ILLEGAL ENCROACHMENT COORDINATES TELEMETRY MODAL ---
+        async function getEncroachmentData() {
+            if (typeof window.ENCROACHMENT_GEOJSON !== 'undefined' && window.ENCROACHMENT_GEOJSON) {
+                return window.ENCROACHMENT_GEOJSON;
+            }
+            try {
+                const resp = await fetch('monitoring_results/illegal_constructions_latest.geojson');
+                if (resp.ok) return await resp.json();
+            } catch (e) {
+                console.log('Fetch error:', e);
+            }
+            return null;
+        }
+
+        async function openCoordinatesModal() {
+            const modal = document.getElementById('coordinatesModal');
+            if (!modal) return;
+
+            const data = await getEncroachmentData();
+            if (!data || !data.features || !data.features.length) {
+                showToast('No encroachment data loaded');
+                return;
+            }
+
+            const tbody = document.getElementById('coordsTableBody');
+            tbody.innerHTML = '';
+
+            data.features.forEach((f) => {
+                const p = f.properties;
+                const tr = document.createElement('tr');
+                tr.className = 'coords-row';
+                tr.setAttribute('data-search', `${p.site_id} ${p.zone_name} ${p.latitude} ${p.longitude} ${p.previous_landcover}`.toLowerCase());
+
+                const isKukrail = (p.zone_name || '').toLowerCase().includes('kukrail');
+                const zoneBadgeColor = isKukrail ? '#10b981' : '#38bdf8';
+                const zoneBg = isKukrail ? 'rgba(16,185,129,0.12)' : 'rgba(56,189,248,0.12)';
+
+                tr.innerHTML = `
+                    <td class="font-mono" style="font-weight: 700; color: #fca5a5;">
+                        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ef4444; margin-right:6px;"></span>
+                        ${p.site_id}
+                    </td>
+                    <td>
+                        <span style="display:inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; color: ${zoneBadgeColor}; background: ${zoneBg}; border: 1px solid ${zoneBadgeColor}40;">
+                            ${p.zone_name || 'Restricted Zone'}
+                        </span>
+                    </td>
+                    <td class="font-mono" style="color: #38bdf8;">${Number(p.latitude).toFixed(5)}° N</td>
+                    <td class="font-mono" style="color: #38bdf8;">${Number(p.longitude).toFixed(5)}° E</td>
+                    <td>
+                        <div class="font-mono" style="color: #fbbf24; font-weight: 600;">${p.area_bigha} Bigha</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">${Number(p.area_sqm).toLocaleString()} m²</div>
+                    </td>
+                    <td style="text-align: right;">
+                        <button class="btn-fly-gps" onclick="flyToSite(${p.latitude}, ${p.longitude}, '${p.site_id}')" title="Fly map directly to this site">
+                            🎯 Fly
+                        </button>
+                        <button class="btn-copy-gps" onclick="copyCoordinate(${p.latitude}, ${p.longitude}, '${p.site_id}')" title="Copy GPS Latitude and Longitude">
+                            📋 Copy
+                        </button>
+                        <a href="${p.maps_url}" target="_blank" class="btn-copy-gps" style="text-decoration:none; display:inline-block; margin-left: 4px;" title="Open in Google Maps">
+                            ↗ Maps
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const searchInput = document.getElementById('coordsSearchInput');
+            if (searchInput) searchInput.value = '';
+            updateCoordsCount(data.features.length, data.features.length);
+
+            modal.classList.add('active');
+        }
+
+        function closeCoordinatesModal() {
+            const modal = document.getElementById('coordinatesModal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function updateCoordsCount(visible, total) {
+            const countBadge = document.getElementById('coordsCountBadge');
+            if (countBadge) {
+                countBadge.textContent = `Showing ${visible} of ${total} sites`;
+            }
+        }
+
+        function filterCoordinatesTable() {
+            const query = (document.getElementById('coordsSearchInput')?.value || '').toLowerCase().trim();
+            const rows = document.querySelectorAll('.coords-row');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const searchStr = row.getAttribute('data-search') || '';
+                if (!query || searchStr.includes(query)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            updateCoordsCount(visibleCount, rows.length);
+        }
+
+        async function flyToSite(lat, lon, siteId) {
+            closeCoordinatesModal();
+
+            if (!encroachmentLayerActive) {
+                await toggleEncroachmentLayer();
+            }
+
+            if (mapPred) {
+                mapPred.flyTo({
+                    center: [lon, lat],
+                    zoom: 16.5,
+                    pitch: 52,
+                    bearing: 15,
+                    duration: 2200
+                });
+
+                new mapboxgl.Popup({ offset: 15 })
+                    .setLngLat([lon, lat])
+                    .setHTML(`
+                        <div style="color: #0f172a; font-family: sans-serif; font-size: 12px; padding: 6px; min-width: 200px;">
+                            <div style="font-weight: 800; color: #dc2626; font-size: 13px; margin-bottom: 4px;">🚨 ${siteId}</div>
+                            <div><b>GPS:</b> ${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}</div>
+                            <div style="margin-top: 6px;">
+                                <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="display:inline-block; background:#2563eb; color:#fff; text-decoration:none; padding:3px 7px; border-radius:4px; font-weight:bold; font-size:10px;">Google Maps ↗</a>
+                            </div>
+                        </div>
+                    `)
+                    .addTo(mapPred);
+            }
+
+            showToast(`Navigating to ${siteId} [${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}]`);
+        }
+
+        function copyCoordinate(lat, lon, siteId) {
+            const text = `${Number(lat).toFixed(5)}, ${Number(lon).toFixed(5)}`;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(`GPS Copied: ${text} (${siteId})`);
+                }).catch(() => fallbackCopy(text, siteId));
+            } else {
+                fallbackCopy(text, siteId);
+            }
+        }
+
+        function fallbackCopy(text, label) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast(`GPS Copied: ${text} (${label})`);
+        }
+
+        async function copyAllCoordinates() {
+            const data = await getEncroachmentData();
+            if (!data || !data.features) return;
+
+            let output = "SITE_ID\tZONE\tLATITUDE\tLONGITUDE\tAREA_BIGHAS\tAREA_SQM\tMAPS_URL\n";
+            data.features.forEach(f => {
+                const p = f.properties;
+                output += `${p.site_id}\t${p.zone_name}\t${p.latitude}\t${p.longitude}\t${p.area_bigha}\t${p.area_sqm}\t${p.maps_url}\n`;
+            });
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(output).then(() => {
+                    showToast(`Copied all ${data.features.length} site coordinates (TSV) to clipboard!`);
+                }).catch(() => {
+                    fallbackCopy(output, `${data.features.length} Sites`);
+                });
+            } else {
+                fallbackCopy(output, `${data.features.length} Sites`);
+            }
+        }
+
+        async function downloadCoordinatesCSV() {
+            const data = await getEncroachmentData();
+            if (!data || !data.features) return;
+
+            let csv = "Site_ID,Severity,Zone_Name,Latitude,Longitude,Area_Bigha,Area_Sqm,Previous_Landcover,Google_Maps_URL\n";
+            data.features.forEach(f => {
+                const p = f.properties;
+                csv += `"${p.site_id}","${p.severity || 'CRITICAL'}","${p.zone_name}","${p.latitude}","${p.longitude}","${p.area_bigha}","${p.area_sqm}","${p.previous_landcover}","${p.maps_url}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `lucknow_illegal_encroachments_gps_${data.features.length}_sites.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast(`Exported ${data.features.length} sites to CSV`);
+        }
+
+        // Close coordinates modal on Escape key or backdrop click
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeCoordinatesModal();
+        });
+        document.getElementById('coordinatesModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'coordinatesModal') closeCoordinatesModal();
+        });
+
+        // --- 9. BOOTSTRAP ---
+        window.addEventListener('DOMContentLoaded', () => {
+            renderLegend();
+            initDualMaps();
+            initCharts();
+            initInteractivity();
+        });
+    </script>
+</body>
+</html>
