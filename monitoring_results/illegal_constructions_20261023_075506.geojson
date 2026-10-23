@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "generated_at": "2026-10-23T07:56:42.366315",
+    "timestamp": "20261023_075506",
+    "current_raster": "pred_lucknow_20261019.tif",
+    "baseline_raster": "pred_lucknow_20261019.tif",
+    "total_sites_detected": 0,
+    "restricted_violations": 0,
+    "total_violation_area_sqm": 0
+  },
+  "features": []
+}

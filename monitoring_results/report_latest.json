@@ -1,5 +1,5 @@
 {
-  "timestamp": "20261019_195150",
+  "timestamp": "20261023_075506",
   "acquisition_date": "20261019",
   "cloud_cover_percent": 0.0,
   "area_km2": 419.4,
@@ -29,5 +29,11 @@
       "percent": 1.09
     }
   },
-  "alerts": []
+  "alerts": [],
+  "encroachments": {
+    "total_expansion_sites": 0,
+    "restricted_violations": 0,
+    "total_violation_area_sqm": 0,
+    "top_alerts": []
+  }
 }
