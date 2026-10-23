@@ -1,75 +1,105 @@
-name: Daily Lucknow Land Cover Monitor
+name: Daily Lucknow Land Cover & Encroachment Monitor
 
 on:
   schedule:
-    - cron: '0 6 * * *'
-  workflow_dispatch:
+    - cron: '0 6 * * *'  # Executes autonomously daily at 06:00 UTC (11:30 AM IST)
+  workflow_dispatch:      # Allows 1-click manual trigger anytime from GitHub Actions tab
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
   monitor:
-    name: Run Land Cover Monitoring
+    name: Autonomous Satellite Surveillance Pipeline
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           cache: 'pip'
-      - name: Install system dependencies
+
+      - name: Install system dependencies (GDAL & PROJ)
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq libgdal-dev gdal-bin libproj-dev
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install boto3 botocore onnxruntime rasterio scipy pandas pillow shapely
-      - name: Download ONNX model
+          pip install boto3 botocore onnxruntime rasterio scipy pandas pillow shapely pyproj google-genai python-dotenv
+
+      - name: Download ONNX Segmentation Model
         id: download_model
         run: |
           mkdir -p weights
-          MODEL_URL="https://github.com/${{ github.repository }}/releases/download/v1.0/lucknow_landcover_final_v1.onnx"
-          echo "Downloading model from $MODEL_URL"
+          MODEL_URL="https://github.com/THEOxVISHAL/lucknow-landcover/releases/download/v1.0/lucknow_landcover_final_v1.onnx"
+          echo "Downloading trained model from $MODEL_URL"
           if curl -L -f -o weights/lucknow_landcover_final_v1.onnx "$MODEL_URL"; then
             echo "Model downloaded successfully"
             ls -lh weights/
           else
-            echo "::warning::Failed to download model from releases. Please upload model to GitHub Releases v1.0."
+            echo "::error::Failed to download model weights."
             exit 1
           fi
-      - name: Verify model
+
+      - name: Verify Model Integrity
         run: |
-          ls -lh weights/lucknow_landcover_final_v1.onnx
           python -c "
           import onnxruntime as ort
           session = ort.InferenceSession('weights/lucknow_landcover_final_v1.onnx')
           print('Model input:', session.get_inputs()[0].name, session.get_inputs()[0].shape)
           print('Model output:', session.get_outputs()[0].name, session.get_outputs()[0].shape)
-          print('Model loaded successfully')
+          print('Model verified successfully')
           "
-      - name: Run Land Cover Monitoring
+
+      - name: Stream Latest Sentinel-2 Satellite Acquisition & Segment Lucknow
         id: monitor
         run: python free_monitor.py
-        env: {}
-      - name: Upload monitoring results
+        env:
+          GDAL_DISABLE_READDIR_ON_OPEN: EMPTY_DIR
+          VSI_CACHE: "TRUE"
+
+      - name: Run Gemma 4 Multimodal Forensic Enforcement
+        if: env.GEMINI_API_KEY != ''
+        run: python run_enforcement_pipeline.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Commit and Push Updated Surveillance Telemetry to GitHub Pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/encroachments_data.js monitoring_results/ data/
+          if git diff --staged --quiet; then
+            echo "No new changes to commit. Monitoring telemetry is already up to date."
+          else
+            git commit -m "chore(surveillance): Autonomous Sentinel-2 surveillance update [skip ci]"
+            git push origin main
+          fi
+
+      - name: Upload monitoring results artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lucknow-monitoring-${{ github.run_id }}-${{ github.run_number }}
+          name: lucknow-surveillance-${{ github.run_id }}
           path: monitoring_results/
           if-no-files-found: warn
           retention-days: 30
           compression-level: 6
+
       - name: Create workflow summary
         if: always()
         run: python generate_summary.py "${{ github.run_number }}"
+
       - name: Notify on failure
         if: failure()
         run: |
-          echo "::error::Monitoring workflow failed. Check logs for details."
+          echo "::error::Monitoring workflow failed. Check execution logs."
