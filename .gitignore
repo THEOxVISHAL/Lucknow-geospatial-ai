@@ -44,4 +44,5 @@ results/*.tiff
 *.log
 wandb/
 demo_rgb.tif.aux.xml
-lucknow_3d_dashboard_backup.html
+lucknow_3d_dashboard*.html
+assets/comprehensive_architecture_diagram.jpg
