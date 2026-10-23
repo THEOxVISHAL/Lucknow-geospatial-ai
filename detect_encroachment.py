@@ -37,8 +37,15 @@ CLASS_MAP = {
 }
 
 
-def load_restricted_zones(zones_path: Path) -> List[Tuple[Dict[str, Any], Any]]:
-    """Load restricted zone geometries and metadata from GeoJSON."""
+# Target restricted zones: Strictly Gomti River and Kukrail Forest
+PRIORITY_ZONES = [
+    "Gomti River Protected Floodplain",
+    "Kukrail Reserve Forest & Sanctuary Buffer"
+]
+
+
+def load_restricted_zones(zones_path: Path, target_keywords=("gomti", "kukrail")) -> List[Tuple[Dict[str, Any], Any]]:
+    """Load restricted zone geometries, strictly filtering for Gomti River and Kukrail Forest."""
     if not zones_path.exists():
         print(f"Warning: Restricted zones file {zones_path} not found. Running general change detection.")
         return []
@@ -47,8 +54,14 @@ def load_restricted_zones(zones_path: Path) -> List[Tuple[Dict[str, Any], Any]]:
     loaded_zones = []
     for feature in data.get("features", []):
         props = feature.get("properties", {})
+        name = props.get("name", "")
+        # Filter strictly for Gomti River and Kukrail Forest
+        if not any(k in name.lower() for k in target_keywords):
+            continue
         geom = shape(feature.get("geometry"))
         loaded_zones.append((props, geom))
+    
+    print(f"  Loaded {len(loaded_zones)} Protected Zones (Strict Mode): {[z[0].get('name') for z in loaded_zones]}")
     return loaded_zones
 
 
@@ -141,6 +154,10 @@ def detect_encroachments(
     min_pixels = max(1, int(min_area_sqm / 100))
     polygon_gen = shapes(labeled_array.astype(np.int32), mask=(labeled_array > 0), transform=dst_transform)
 
+    import pyproj
+    from shapely.ops import transform as shapely_transform
+    transformer_wgs84 = pyproj.Transformer.from_crs(dst_crs, "EPSG:4326", always_xy=True)
+
     site_idx = 1
     restricted_count = 0
     total_encroached_sqm = 0
@@ -187,37 +204,41 @@ def detect_encroachments(
             total_encroached_sqm += area_sqm
             # Mark in difference raster: 2 = Restricted Encroachment
             encroachment_raster[labeled_array == label_id] = 2
+
+            maps_url = f"https://www.google.com/maps?q={lat:.5f},{lon:.5f}"
+            area_bigha = round(area_sqm / 2530.0, 2)  # 1 Pucca Bigha in UP ≈ 2530 sq.m
+
+            site_record = {
+                "site_id": site_id,
+                "detected_date": timestamp[:8],
+                "is_restricted_violation": True,
+                "severity": severity,
+                "zone_name": zone_name,
+                "zone_category": zone_category,
+                "previous_landcover": dominant_prev_name,
+                "area_sqm": area_sqm,
+                "area_bigha": area_bigha,
+                "latitude": round(lat, 5),
+                "longitude": round(lon, 5),
+                "maps_url": maps_url
+            }
+
+            alerts_table.append(site_record)
+
+            # Reproject geometry to WGS84 (EPSG:4326) for Mapbox GL JS / Web rendering
+            poly_wgs84 = shapely_transform(transformer_wgs84.transform, shape(poly_geom))
+            poly_geom_wgs84 = mapping(poly_wgs84)
+
+            # Build GeoJSON feature
+            feature = {
+                "type": "Feature",
+                "properties": site_record,
+                "geometry": poly_geom_wgs84
+            }
+            features_geojson.append(feature)
         else:
-            # 1 = Permitted General Expansion
+            # 1 = Permitted General Expansion (outside Kukrail & Gomti River)
             encroachment_raster[labeled_array == label_id] = 1
-
-        maps_url = f"https://www.google.com/maps?q={lat:.5f},{lon:.5f}"
-        area_bigha = round(area_sqm / 2530.0, 2)  # 1 Pucca Bigha in UP ≈ 2530 sq.m
-
-        site_record = {
-            "site_id": site_id,
-            "detected_date": timestamp[:8],
-            "is_restricted_violation": is_restricted,
-            "severity": severity,
-            "zone_name": zone_name,
-            "zone_category": zone_category,
-            "previous_landcover": dominant_prev_name,
-            "area_sqm": area_sqm,
-            "area_bigha": area_bigha,
-            "latitude": round(lat, 5),
-            "longitude": round(lon, 5),
-            "maps_url": maps_url
-        }
-
-        alerts_table.append(site_record)
-
-        # Build GeoJSON feature
-        feature = {
-            "type": "Feature",
-            "properties": site_record,
-            "geometry": poly_geom
-        }
-        features_geojson.append(feature)
 
     # 4. Save Products
     # A. GeoJSON Vector Products
@@ -241,6 +262,12 @@ def detect_encroachments(
         json.dump(geojson_data, f, indent=2)
     with open(latest_geojson, "w", encoding="utf-8") as f:
         json.dump(geojson_data, f, indent=2)
+
+    # Save embedded JS fallback for file:/// protocol in browsers without CORS errors
+    js_fallback_path = SCRIPT_DIR / "results" / "encroachments_data.js"
+    js_fallback_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(js_fallback_path, "w", encoding="utf-8") as f:
+        f.write("window.ENCROACHMENT_GEOJSON = " + json.dumps(geojson_data) + ";\n")
 
     # B. CSV Tabular Alerts (Prioritize Restricted Encroachments First)
     alerts_df = pd.DataFrame(alerts_table)

@@ -20,7 +20,7 @@ data:
   val_split: 0.15
   test_split: 0.15
   spatial_split: true
-  cloud_threshold: 0.1
+  cloud_threshold: 0.2
   use_class_balanced_sampling: true
   curriculum_learning: true
   curriculum_epochs: 30

@@ -20,6 +20,9 @@ os.environ["GDAL_HTTP_MERGE_CONSECUTIVE_RANGES"] = "YES"
 os.environ["VSI_CACHE"] = "TRUE"
 os.environ["VSI_CACHE_SIZE"] = "50000000"
 os.environ["CPL_VSIL_CURL_ALLOWED_EXTENSIONS"] = ".jp2,.tif,.xml,.json"
+os.environ["GDAL_HTTP_TIMEOUT"] = "30"
+os.environ["GDAL_HTTP_MAX_RETRY"] = "3"
+os.environ["GDAL_HTTP_RETRY_DELAY"] = "2"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(line_buffering=True)
@@ -55,6 +58,10 @@ ALERT_THRESHOLDS = {
     "Water": {"min": 1.0, "msg": "WARNING: Water bodies critically low (< 1%)"}
 }
 
+# Cloud cover & coverage filters
+MAX_CLOUD_COVER = 20.0     # Max allowed cloud cover percentage (20% threshold)
+MIN_DATA_COVERAGE = 80.0   # Require >= 80% coverage to ensure full Lucknow AOI is captured
+
 # Lucknow City AOI inside 44RMQ (Origin: 399960, 3000000, 10m/px)
 # 2048 x 2048 pixels = 20.48 km x 20.48 km = 419.4 km²
 AOI_COL_OFF = 8448
@@ -63,10 +70,11 @@ AOI_SIZE = 2048
 
 
 # ======================== S3 DATA DISCOVERY ========================
-def get_latest_acquisition(tile=LUCKNOW_TILE):
+def get_latest_acquisition(tile=LUCKNOW_TILE, max_cloud=MAX_CLOUD_COVER, min_coverage=MIN_DATA_COVERAGE):
     """
-    Find latest available date for tile on AWS S3 sentinel-s2-l2a.
-    Traverses: tiles/{tile}/{year}/{month}/{day}/{sequence}/
+    Find latest available date for tile on AWS S3 sentinel-s2-l2a
+    satisfying cloud cover <= max_cloud (20%) and data coverage >= min_coverage (80%).
+    Traverses backwards chronologically.
     """
     base_url = f"https://{S3_BUCKET}.s3.amazonaws.com/"
     ns = {"s3": "http://s3.amazonaws.com/doc/2006-03-01/"}
@@ -78,44 +86,51 @@ def get_latest_acquisition(tile=LUCKNOW_TILE):
             root = ET.fromstring(resp.read())
         return [p.find("s3:Prefix", ns).text for p in root.findall("s3:CommonPrefixes", ns)]
 
-    print(f"Searching latest imagery on AWS S3 for tile {tile}...")
+    print(f"Searching latest imagery on AWS S3 for tile {tile} (Max Cloud: {max_cloud}%, Min Coverage: {min_coverage}%)...")
     # 1. Years
-    years = [p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/") if p.split("/")[-2].isdigit()]
+    years = sorted([p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/") if p.split("/")[-2].isdigit()], key=int, reverse=True)
     if not years:
         raise RuntimeError(f"No years found for tile {tile} on S3 bucket {S3_BUCKET}")
-    latest_year = max(years, key=int)
 
-    # 2. Months
-    months = [p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{latest_year}/") if p.split("/")[-2].isdigit()]
-    if not months:
-        raise RuntimeError(f"No months found for {tile}/{latest_year}")
-    latest_month = max(months, key=int)
+    # Check recent year and months in reverse chronological order
+    for year in years[:1]:
+        months = sorted([p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{year}/") if p.split("/")[-2].isdigit()], key=int, reverse=True)
+        for month in months[:2]:
+            days = sorted([p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{year}/{month}/") if p.split("/")[-2].isdigit()], key=int, reverse=True)
+            for day in days:
+                day_prefix = f"tiles/{tile}/{year}/{month}/{day}/"
+                seqs = sorted([p.split("/")[-2] for p in list_prefixes(day_prefix) if p.split("/")[-2].isdigit()], key=int, reverse=True)
+                for seq in seqs:
+                    rel_path = f"tiles/{tile}/{year}/{month}/{day}/{seq}"
+                    info_url = f"{base_url}{rel_path}/tileInfo.json"
+                    try:
+                        req = urllib.request.Request(info_url, headers={"User-Agent": "LucknowMonitor/1.0"})
+                        with urllib.request.urlopen(req, timeout=10) as resp:
+                            info = json.loads(resp.read().decode("utf-8"))
+                            cov = float(info.get("dataCoveragePercentage", 0.0))
+                            cloud_pct = float(info.get("cloudyPixelPercentage", 0.0))
 
-    # 3. Days
-    days = [p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{latest_year}/{latest_month}/") if p.split("/")[-2].isdigit()]
-    if not days:
-        raise RuntimeError(f"No days found for {tile}/{latest_year}/{latest_month}")
-    latest_day = max(days, key=int)
+                            if cov >= min_coverage and cloud_pct <= max_cloud:
+                                date_str = f"{year}{int(month):02d}{int(day):02d}"
+                                print(f"Selected Acquisition: {rel_path} | Date: {date_str} | Cloud: {cloud_pct:.1f}% (<= {max_cloud}%) | Coverage: {cov:.1f}%")
+                                return rel_path, date_str, cloud_pct
+                            else:
+                                print(f"  Skipping {year}-{month}-{day} seq {seq}: Coverage={cov:.1f}% (<{min_coverage}%) or Cloud={cloud_pct:.1f}% (>{max_cloud}%)")
+                    except Exception as e:
+                        print(f"  Could not read tileInfo for {rel_path}: {e}")
 
-    # 4. Sequences
-    seqs = [p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{latest_year}/{latest_month}/{latest_day}/") if p.split("/")[-2].isdigit()]
-    latest_seq = max(seqs, key=int) if seqs else "0"
-
+    # Fallback to absolute latest if nothing passed criteria
+    print("Warning: No scene passed strict criteria. Using newest available...")
+    latest_year = years[0]
+    months = sorted([p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{latest_year}/") if p.split("/")[-2].isdigit()], key=int, reverse=True)
+    latest_month = months[0]
+    days = sorted([p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{latest_year}/{latest_month}/") if p.split("/")[-2].isdigit()], key=int, reverse=True)
+    latest_day = days[0]
+    seqs = sorted([p.split("/")[-2] for p in list_prefixes(f"tiles/{tile}/{latest_year}/{latest_month}/{latest_day}/") if p.split("/")[-2].isdigit()], key=int, reverse=True)
+    latest_seq = seqs[0] if seqs else "0"
     date_str = f"{latest_year}{int(latest_month):02d}{int(latest_day):02d}"
     rel_path = f"tiles/{tile}/{latest_year}/{latest_month}/{latest_day}/{latest_seq}"
-    
-    # Try fetching tileInfo.json for cloud cover metadata
-    cloud_pct = 0.0
-    try:
-        info_url = f"{base_url}{rel_path}/tileInfo.json"
-        req = urllib.request.Request(info_url, headers={"User-Agent": "LucknowMonitor/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            info = json.loads(resp.read().decode("utf-8"))
-            cloud_pct = float(info.get("cloudyPixelPercentage", 0.0))
-    except Exception as e:
-        print(f"Could not read tileInfo.json: {e}")
-
-    return rel_path, date_str, cloud_pct
+    return rel_path, date_str, 0.0
 
 
 # ======================== BAND STREAMING & INDICES ========================
@@ -152,6 +167,12 @@ def read_aoi_bands(tile_path, col_off=AOI_COL_OFF, row_off=AOI_ROW_OFF, size=AOI
 
     res_dict = dict(results)
     ordered_arrays = [res_dict[b_name] for b_name, _, _ in bands_info]
+
+    # Verify AOI window is not cut off by orbital swath boundary
+    zero_ratio = float((ordered_arrays[0] == 0).mean())
+    if zero_ratio > 0.30:
+        raise ValueError(f"AOI window contains {zero_ratio*100:.1f}% NoData pixels (satellite pass cut off).")
+
     return np.stack(ordered_arrays, axis=0)  # (10, H, W)
 
 

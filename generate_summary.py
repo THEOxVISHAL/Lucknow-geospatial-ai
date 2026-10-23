@@ -34,7 +34,7 @@ def main():
             cloud_pct = data.get("cloud_cover_percent", 0.0)
             area_km2 = data.get("area_km2", 0.0)
 
-            lines.append(f"**Run:** #{run_number} | **Acquisition Date:** {acq_date} | **Cloud Cover:** {cloud_pct:.1f}%\n")
+            lines.append(f"**Run:** #{run_number} | **Acquisition Date:** {acq_date} | **Cloud Cover:** {cloud_pct:.1f}% (Max Allowed: 20.0%)\n")
             lines.append("### Class Distribution\n")
             lines.append("| Class | Percentage | Pixels |")
             lines.append("|-------|------------|--------|")

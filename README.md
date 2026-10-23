@@ -1,8 +1,9 @@
 # 🛰️ Lucknow Geospatial AI: Autonomous Land Cover & Encroachment Surveillance Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Gemma 4](https://img.shields.io/badge/Multimodal%20AI-Google%20Gemma%204%20(Open%20Weights)-4285F4.svg)](https://ai.google.dev/)
 [![Daily Monitor CI](https://github.com/THEOxVISHAL/lucknow-landcover/actions/workflows/monitor.yml/badge.svg)](https://github.com/THEOxVISHAL/lucknow-landcover/actions/workflows/monitor.yml)
-[![Python 3.10](https://img.shields.io/badge/Python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Satellite](https://img.shields.io/badge/Data-Copernicus%20Sentinel--2%20L2A-4B8BBE.svg)](https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2)
 [![Model](https://img.shields.io/badge/AI%20Backbone-EfficientNet--B5%20%7C%20UperNet-FF6F00.svg)](https://github.com/qubvel/segmentation_models.pytorch)
 [![Inference Engine](https://img.shields.io/badge/Runtime-ONNX%20CPU%20Optimized-005CED.svg)](https://onnxruntime.ai/)
@@ -36,6 +37,7 @@ This project is built 100% on open-source, open-weight AI architectures and open
 | **Inference Engine** | **ONNX Runtime** (Linux Foundation / MIT) | Graph-optimized CPU runtime enabling full-city inference in **25–30 seconds**. |
 | **Satellite Imagery** | **ESA Copernicus Sentinel-2 L2A** (Open Access) | 10m/pixel multispectral surface reflectance data streamed via AWS Open Data. |
 | **Training Labels** | **Google Dynamic World** (Open Access) | Bi-temporal multimodal ground truth remapped and verified across Lucknow ground sites. |
+| **Multimodal Reasoning** | **Google Gemma 4** (`gemma-4-26b-a4b-it` open weights) | Satellite visual chip forensic auditing, statutory NGT violation analysis, and automated legal notice drafting. |
 | **GIS & Geometry** | **Rasterio & Shapely** (OSGeo / BSD) | Remote window `/vsicurl/` streaming and vector polygon encroachment extraction. |
 
 ---
@@ -79,17 +81,41 @@ Whenever a new concrete expansion ($\ge 300\text{ m}^2$) is detected inside a re
 
 ---
 
+## 🧠 Gemma 4 Multimodal Visual Reasoning & Legal Enforcement
+
+Beyond tabular coordinate alerts, the platform integrates **Google's open-weights Gemma 4 Multimodal Model** (`gemma-4-26b-a4b-it` via Gemini API) as an **Autonomous Geospatial Intelligence Officer**:
+
+1. **Autonomous Visual Forensic Inspection**: Crops 512×512 Sentinel-2 true-color surface reflectance chips for detected breaches and inspects physical ground evidence (concrete plinth grids, linear boundary walls, mechanized riverbed filling, and illegal access road cuts).
+2. **Environmental Threat Matrix**: Evaluates macro-ecological damage (e.g., Gomti River natural flood retention loss triggering urban monsoon flooding, or Kukrail Reserve Forest wildlife corridor fragmentation).
+3. **Statutory Demolition Order Drafting**: Automatically drafts court-admissible show-cause and demolition notices citing Section 27(1) of the **UP Urban Planning & Development Act 1973** and **National Green Tribunal (NGT) Principal Bench Orders**.
+4. **Tactical Radio Dispatch Scripts**: Formulates 25-word field radio dispatch directives for municipal enforcement teams and police squads.
+
+### Sample Live Gemma 4 Output on Gomti Site 467:
+```json
+{
+  "site_id": "LKO-ENC-20261020-467",
+  "zone": "Gomti River Protected Floodplain",
+  "area_sqm": 31800.0,
+  "visual_forensic_findings": "The image reveals extensive unauthorized concrete plinths and linear structural layouts directly encroaching upon the Gomti River floodplain. Visible boundary wall construction and significant soil disturbance indicate organized, permanent settlement encroachment.",
+  "environmental_threat": "Destruction of the Gomti flood retention buffer, significantly increasing urban flash flooding risk for Lucknow.",
+  "statutory_violation": "Violation of NGT Gomti Buffer Order O.A. 6/2012 and Section 27 of UP Urban Planning & Development Act 1973.",
+  "legal_demolition_notice": "Notice is hereby issued regarding illegal construction within the protected Gomti River floodplain. You are commanded to cease all activities immediately. Failure to clear within 48 hours will result in summary demolition by LDA enforcement squad."
+}
+```
+
+---
+
 ## ⚡ Zero-Cost Serverless Pipeline Architecture
 
 ```mermaid
 flowchart LR
     A["🛰️ Sentinel-2 L2A (AWS S3)"] -->|GDAL /vsicurl/ Stream| B["🐍 free_monitor.py"]
     B -->|17-Band Tensor| C["🧠 UperNet-B5 ONNX Engine"]
-    C -->|2048x2048 Mask| D["📊 Land Cover Stats"]
     C -->|Prediction GeoTIFF| E["🚨 detect_encroachment.py"]
     E -->|Restricted Zones Overlay| F["📑 Encroachment GeoJSON & CSV"]
-    D & F --> G["🤖 GitHub Actions CI/CD"]
-    G -->|Daily Step Summary| H["🌐 GitHub Actions Report & Artifacts"]
+    F -->|Satellite Visual Chips| G["🧠 Gemma 4 Multimodal Agent (gemma_inspector.py)"]
+    G -->|Forensic Audit & Legal Notice| H["🏛️ Official Enforcement Dossier (JSON/MD)"]
+    G -->|Interactive 3D Audit| I["🌐 3D Digital Twin (lucknow_3d_dashboard.html)"]
 ```
 
 1. **Daily Cron Trigger**: GitHub Actions wakes up daily at 06:00 UTC.
@@ -128,10 +154,21 @@ python free_monitor.py
 python detect_encroachment.py --min-area 300
 ```
 
-### 4. Inspect Results
+### 4. Run Gemma 4 Autonomous Enforcement Pipeline
+```bash
+# Set your GEMINI_API_KEY in .env (or environment variable)
+# GEMINI_API_KEY=your_key_here
+
+# Audits top critical encroachments, inspects satellite chips, and drafts court-ready notices:
+python run_enforcement_pipeline.py
+```
+
+### 5. Inspect Results
 Generated files in `monitoring_results/`:
 - `pred_lucknow_<date>.tif` (Georeferenced LULC raster in EPSG:32644)
 - `encroachment_alerts_latest.csv` (Tabular site alert sheet)
+- `gemma_enforcement_dossiers.json` (Gemma 4 legal assessments, visual forensics & notices)
+- `chips/` (High-resolution cropped Sentinel-2 true-color satellite chips)
 - `illegal_constructions_latest.geojson` (Vector boundaries of detected sites)
 - `report_latest.json` (Machine-readable statistics)
 - `trends.csv` (Long-term land cover change trends)
@@ -141,7 +178,7 @@ Generated files in `monitoring_results/`:
 ## 🌐 Interactive Web Dashboards
 
 - **2D Geospatial Portal (`index.html`)**: Mapbox GL JS dual-pane satellite swipe, opacity control, time-series telemetry charts, and interactive **🚨 Show Encroachments** layer with click popups.
-- **3D Digital Twin (`lucknow_3d_dashboard.html`)**: Three.js WebGL engine rendering high-resolution extruded polygonal land cover models with camera flight controls.
+- **3D Digital Twin Command Center (`lucknow_3d_dashboard.html`)**: Three.js WebGL engine rendering high-resolution extruded polygonal land cover models with waypoint camera flight controls and interactive **🚨 Gemma 4 Satellite Intelligence Dossier** modal.
 
 ---
 
