@@ -107,6 +107,8 @@ Beyond tabular coordinate alerts, the platform integrates **Google's open-weight
 
 ## ⚡ Zero-Cost Serverless Pipeline Architecture
 
+![Lucknow Geospatial AI System Architecture](assets/lucknow_geospatial_ai_architecture.jpg)
+
 ```mermaid
 flowchart LR
     A["🛰️ Sentinel-2 L2A (AWS S3)"] -->|GDAL /vsicurl/ Stream| B["🐍 free_monitor.py"]
