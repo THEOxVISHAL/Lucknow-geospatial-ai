@@ -33,6 +33,9 @@ data/predictions/
 data/202*
 data/S2A*
 
+# Exception: Lightweight baseline label raster needed for change detection (only 192 KB)
+!data/labels/lucknow_labels.tif
+
 # Heavy TIFFs inside results
 results/*.tif
 results/*.tiff

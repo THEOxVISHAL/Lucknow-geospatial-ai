@@ -1,20 +1,16 @@
 {
-  "timestamp": "20261019_195150",
+  "timestamp": "20261023_115148",
   "acquisition_date": "20261019",
   "cloud_cover_percent": 0.0,
   "area_km2": 419.4,
   "class_distribution": {
-    "Dense Forest": {
-      "pixels": 881490,
-      "percent": 21.02
-    },
     "Urban": {
       "pixels": 2786465,
       "percent": 66.43
     },
-    "Open Forest": {
-      "pixels": 14478,
-      "percent": 0.35
+    "Dense Forest": {
+      "pixels": 881490,
+      "percent": 21.02
     },
     "Agriculture": {
       "pixels": 344926,
@@ -27,7 +23,23 @@
     "Bare/Fallow": {
       "pixels": 45761,
       "percent": 1.09
+    },
+    "Open Forest": {
+      "pixels": 14478,
+      "percent": 0.35
     }
   },
-  "alerts": []
+  "alerts": [
+    "CRITICAL: 66 unauthorized concrete encroachment sites detected in Gomti River Protected Floodplain & Kukrail Reserve Forest (34.21 Ha / 135.2 Bigha)"
+  ],
+  "encroachments": {
+    "total_expansion_sites": 66,
+    "restricted_violations": 66,
+    "total_violation_area_sqm": 342100,
+    "total_violation_area_bigha": 135.2,
+    "zones": {
+      "Kukrail Reserve Forest & Sanctuary Buffer": 41,
+      "Gomti River Protected Floodplain": 25
+    }
+  }
 }
