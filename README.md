@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Gemma 4](https://img.shields.io/badge/Multimodal%20AI-Google%20Gemma%204%20(Open%20Weights)-4285F4.svg)](https://ai.google.dev/)
-[![Daily Monitor CI](https://github.com/THEOxVISHAL/lucknow-landcover/actions/workflows/monitor.yml/badge.svg)](https://github.com/THEOxVISHAL/lucknow-landcover/actions/workflows/monitor.yml)
+[![Daily Monitor CI](https://github.com/THEOxVISHAL/Lucknow-geospatial-ai/actions/workflows/monitor.yml/badge.svg)](https://github.com/THEOxVISHAL/Lucknow-geospatial-ai/actions/workflows/monitor.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Satellite](https://img.shields.io/badge/Data-Copernicus%20Sentinel--2%20L2A-4B8BBE.svg)](https://sentinels.copernicus.eu/web/sentinel/missions/sentinel-2)
 [![Model](https://img.shields.io/badge/AI%20Backbone-EfficientNet--B5%20%7C%20UperNet-FF6F00.svg)](https://github.com/qubvel/segmentation_models.pytorch)
@@ -131,8 +131,8 @@ flowchart LR
 
 ### 1. Clone & Setup
 ```bash
-git clone https://github.com/THEOxVISHAL/lucknow-landcover.git
-cd lucknow-landcover
+git clone https://github.com/THEOxVISHAL/Lucknow-geospatial-ai.git
+cd Lucknow-geospatial-ai
 
 python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
