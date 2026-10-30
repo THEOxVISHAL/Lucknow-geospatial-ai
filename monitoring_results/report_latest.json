@@ -1,5 +1,5 @@
 {
-  "timestamp": "20261029_123825",
+  "timestamp": "20261030_122832",
   "acquisition_date": "20261029",
   "cloud_cover_percent": 0.0,
   "area_km2": 419.4,
@@ -38,8 +38,8 @@
     "total_violation_area_sqm": 6634900,
     "top_alerts": [
       {
-        "site_id": "LKO-ENC-20261029-370",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-370",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -52,8 +52,8 @@
         "maps_url": "https://www.google.com/maps?q=26.89589,80.88798"
       },
       {
-        "site_id": "LKO-ENC-20261029-373",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-373",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -66,8 +66,8 @@
         "maps_url": "https://www.google.com/maps?q=26.89589,80.88798"
       },
       {
-        "site_id": "LKO-ENC-20261029-194",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-194",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -80,8 +80,8 @@
         "maps_url": "https://www.google.com/maps?q=26.92338,81.01255"
       },
       {
-        "site_id": "LKO-ENC-20261029-749",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-749",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -94,8 +94,8 @@
         "maps_url": "https://www.google.com/maps?q=26.81384,81.01540"
       },
       {
-        "site_id": "LKO-ENC-20261029-218",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-218",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -108,8 +108,8 @@
         "maps_url": "https://www.google.com/maps?q=26.91788,81.00652"
       },
       {
-        "site_id": "LKO-ENC-20261029-115",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-115",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -122,8 +122,8 @@
         "maps_url": "https://www.google.com/maps?q=26.93640,80.98998"
       },
       {
-        "site_id": "LKO-ENC-20261029-244",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-244",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -136,8 +136,8 @@
         "maps_url": "https://www.google.com/maps?q=26.91332,81.00682"
       },
       {
-        "site_id": "LKO-ENC-20261029-237",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-237",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -150,8 +150,8 @@
         "maps_url": "https://www.google.com/maps?q=26.91505,81.02604"
       },
       {
-        "site_id": "LKO-ENC-20261029-342",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-342",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -164,8 +164,8 @@
         "maps_url": "https://www.google.com/maps?q=26.89153,80.89569"
       },
       {
-        "site_id": "LKO-ENC-20261029-158",
-        "detected_date": "20261029",
+        "site_id": "LKO-ENC-20261030-158",
+        "detected_date": "20261030",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
