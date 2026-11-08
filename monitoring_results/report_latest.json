@@ -1,85 +1,85 @@
 {
-  "timestamp": "20261107_124428",
-  "acquisition_date": "20261105",
+  "timestamp": "20261108_130053",
+  "acquisition_date": "20261108",
   "cloud_cover_percent": 0.0,
   "area_km2": 419.4,
   "class_distribution": {
     "Dense Forest": {
-      "pixels": 704375,
-      "percent": 16.79
+      "pixels": 720470,
+      "percent": 17.18
     },
     "Urban": {
-      "pixels": 2818266,
-      "percent": 67.19
+      "pixels": 2828817,
+      "percent": 67.44
     },
     "Open Forest": {
-      "pixels": 15859,
-      "percent": 0.38
+      "pixels": 17559,
+      "percent": 0.42
     },
     "Agriculture": {
-      "pixels": 510930,
-      "percent": 12.18
+      "pixels": 493576,
+      "percent": 11.77
     },
     "Water": {
-      "pixels": 94587,
-      "percent": 2.26
+      "pixels": 82892,
+      "percent": 1.98
     },
     "Bare/Fallow": {
-      "pixels": 50287,
-      "percent": 1.2
+      "pixels": 50990,
+      "percent": 1.22
     }
   },
   "alerts": [],
   "encroachments": {
-    "total_expansion_sites": 77,
-    "restricted_violations": 77,
-    "total_violation_area_sqm": 427300,
+    "total_expansion_sites": 80,
+    "restricted_violations": 80,
+    "total_violation_area_sqm": 407400,
     "top_alerts": [
       {
-        "site_id": "LKO-ENC-20261107-564",
-        "detected_date": "20261107",
+        "site_id": "LKO-ENC-20261108-456",
+        "detected_date": "20261108",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
         "zone_category": "River_Buffer",
         "previous_landcover": "Agriculture",
-        "area_sqm": 26900,
-        "area_bigha": 10.63,
-        "latitude": 26.78628,
-        "longitude": 81.04252,
-        "maps_url": "https://www.google.com/maps?q=26.78628,81.04252"
+        "area_sqm": 36700,
+        "area_bigha": 14.51,
+        "latitude": 26.8173,
+        "longitude": 81.01121,
+        "maps_url": "https://www.google.com/maps?q=26.81730,81.01121"
       },
       {
-        "site_id": "LKO-ENC-20261107-461",
-        "detected_date": "20261107",
+        "site_id": "LKO-ENC-20261108-255",
+        "detected_date": "20261108",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
-        "zone_name": "Gomti River Protected Floodplain",
-        "zone_category": "River_Buffer",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
         "previous_landcover": "Agriculture",
-        "area_sqm": 25000,
-        "area_bigha": 9.88,
-        "latitude": 26.81428,
-        "longitude": 81.01236,
-        "maps_url": "https://www.google.com/maps?q=26.81428,81.01236"
+        "area_sqm": 33300,
+        "area_bigha": 13.16,
+        "latitude": 26.89857,
+        "longitude": 81.01989,
+        "maps_url": "https://www.google.com/maps?q=26.89857,81.01989"
       },
       {
-        "site_id": "LKO-ENC-20261107-462",
-        "detected_date": "20261107",
+        "site_id": "LKO-ENC-20261108-259",
+        "detected_date": "20261108",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
-        "zone_name": "Gomti River Protected Floodplain",
-        "zone_category": "River_Buffer",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
         "previous_landcover": "Agriculture",
-        "area_sqm": 25000,
-        "area_bigha": 9.88,
-        "latitude": 26.81428,
-        "longitude": 81.01236,
-        "maps_url": "https://www.google.com/maps?q=26.81428,81.01236"
+        "area_sqm": 27800,
+        "area_bigha": 10.99,
+        "latitude": 26.89748,
+        "longitude": 81.02447,
+        "maps_url": "https://www.google.com/maps?q=26.89748,81.02447"
       },
       {
-        "site_id": "LKO-ENC-20261107-212",
-        "detected_date": "20261107",
+        "site_id": "LKO-ENC-20261108-216",
+        "detected_date": "20261108",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -92,64 +92,8 @@
         "maps_url": "https://www.google.com/maps?q=26.90505,81.00942"
       },
       {
-        "site_id": "LKO-ENC-20261107-130",
-        "detected_date": "20261107",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 18100,
-        "area_bigha": 7.15,
-        "latitude": 26.92351,
-        "longitude": 81.01165,
-        "maps_url": "https://www.google.com/maps?q=26.92351,81.01165"
-      },
-      {
-        "site_id": "LKO-ENC-20261107-119",
-        "detected_date": "20261107",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Gomti River Protected Floodplain",
-        "zone_category": "River_Buffer",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 16100,
-        "area_bigha": 6.36,
-        "latitude": 26.92649,
-        "longitude": 80.86182,
-        "maps_url": "https://www.google.com/maps?q=26.92649,80.86182"
-      },
-      {
-        "site_id": "LKO-ENC-20261107-445",
-        "detected_date": "20261107",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Gomti River Protected Floodplain",
-        "zone_category": "River_Buffer",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 15800,
-        "area_bigha": 6.25,
-        "latitude": 26.81703,
-        "longitude": 81.01197,
-        "maps_url": "https://www.google.com/maps?q=26.81703,81.01197"
-      },
-      {
-        "site_id": "LKO-ENC-20261107-454",
-        "detected_date": "20261107",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Gomti River Protected Floodplain",
-        "zone_category": "River_Buffer",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 15800,
-        "area_bigha": 6.25,
-        "latitude": 26.81703,
-        "longitude": 81.01197,
-        "maps_url": "https://www.google.com/maps?q=26.81703,81.01197"
-      },
-      {
-        "site_id": "LKO-ENC-20261107-466",
-        "detected_date": "20261107",
+        "site_id": "LKO-ENC-20261108-471",
+        "detected_date": "20261108",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -158,22 +102,78 @@
         "area_sqm": 14700,
         "area_bigha": 5.81,
         "latitude": 26.81302,
-        "longitude": 81.01547,
-        "maps_url": "https://www.google.com/maps?q=26.81302,81.01547"
+        "longitude": 81.01546,
+        "maps_url": "https://www.google.com/maps?q=26.81302,81.01546"
       },
       {
-        "site_id": "LKO-ENC-20261107-136",
-        "detected_date": "20261107",
+        "site_id": "LKO-ENC-20261108-136",
+        "detected_date": "20261108",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
         "zone_category": "River_Buffer",
         "previous_landcover": "Agriculture",
-        "area_sqm": 14400,
-        "area_bigha": 5.69,
-        "latitude": 26.92232,
-        "longitude": 80.85995,
-        "maps_url": "https://www.google.com/maps?q=26.92232,80.85995"
+        "area_sqm": 13800,
+        "area_bigha": 5.45,
+        "latitude": 26.92209,
+        "longitude": 80.85983,
+        "maps_url": "https://www.google.com/maps?q=26.92209,80.85983"
+      },
+      {
+        "site_id": "LKO-ENC-20261108-234",
+        "detected_date": "20261108",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 11300,
+        "area_bigha": 4.47,
+        "latitude": 26.90121,
+        "longitude": 81.00903,
+        "maps_url": "https://www.google.com/maps?q=26.90121,81.00903"
+      },
+      {
+        "site_id": "LKO-ENC-20261108-177",
+        "detected_date": "20261108",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Gomti River Protected Floodplain",
+        "zone_category": "River_Buffer",
+        "previous_landcover": "Open Forest / Scrub",
+        "area_sqm": 10700,
+        "area_bigha": 4.23,
+        "latitude": 26.9119,
+        "longitude": 80.87429,
+        "maps_url": "https://www.google.com/maps?q=26.91190,80.87429"
+      },
+      {
+        "site_id": "LKO-ENC-20261108-051",
+        "detected_date": "20261108",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
+        "previous_landcover": "Bare / Fallow",
+        "area_sqm": 10200,
+        "area_bigha": 4.03,
+        "latitude": 26.94325,
+        "longitude": 80.99863,
+        "maps_url": "https://www.google.com/maps?q=26.94325,80.99863"
+      },
+      {
+        "site_id": "LKO-ENC-20261108-163",
+        "detected_date": "20261108",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 9100,
+        "area_bigha": 3.6,
+        "latitude": 26.91471,
+        "longitude": 81.00656,
+        "maps_url": "https://www.google.com/maps?q=26.91471,81.00656"
       }
     ]
   }
