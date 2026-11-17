@@ -1,8 +1,8 @@
 {
   "type": "FeatureCollection",
   "metadata": {
-    "generated_at": "2026-11-16T15:20:40.809019",
-    "timestamp": "20261116_151840",
+    "generated_at": "2026-11-17T15:47:23.910944",
+    "timestamp": "20261117_154523",
     "current_raster": "pred_lucknow_20261113.tif",
     "baseline_raster": "lucknow_labels.tif",
     "total_sites_detected": 127,
@@ -13,8 +13,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-021",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-021",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -89,8 +89,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-032",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-032",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -181,8 +181,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-033",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-033",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -225,8 +225,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-036",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-036",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -445,8 +445,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-056",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-056",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -681,8 +681,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-057",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-057",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -765,8 +765,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-077",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-077",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1049,8 +1049,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-079",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-079",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1141,8 +1141,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-087",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-087",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1209,8 +1209,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-089",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-089",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1325,8 +1325,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-090",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-090",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1369,8 +1369,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-091",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-091",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1429,8 +1429,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-095",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-095",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1505,8 +1505,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-099",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-099",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1605,8 +1605,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-101",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-101",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1681,8 +1681,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-102",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-102",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -1973,8 +1973,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-104",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-104",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -2353,8 +2353,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-115",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-115",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -2501,8 +2501,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-116",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-116",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -2921,8 +2921,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-120",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-120",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3013,8 +3013,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-121",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-121",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -3097,8 +3097,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-122",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-122",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3189,8 +3189,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-125",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-125",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3241,8 +3241,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-126",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-126",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -3341,8 +3341,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-131",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-131",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3433,8 +3433,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-137",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-137",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3597,8 +3597,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-141",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-141",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3745,8 +3745,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-156",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-156",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -3789,8 +3789,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-157",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-157",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -3985,8 +3985,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-159",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-159",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -4029,8 +4029,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-162",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-162",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -4097,8 +4097,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-164",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-164",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -6807,8 +6807,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-174",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-174",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -6947,8 +6947,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-179",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-179",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -7415,8 +7415,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-186",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-186",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -7723,8 +7723,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-194",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-194",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -7783,8 +7783,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-213",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-213",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -8011,8 +8011,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-214",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-214",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -8439,8 +8439,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-216",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-216",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -8963,8 +8963,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-217",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-217",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -9111,8 +9111,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-222",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-222",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -9251,8 +9251,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-225",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-225",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -9319,8 +9319,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-229",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-229",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -9571,8 +9571,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-235",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-235",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -9631,8 +9631,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-236",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-236",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -9739,8 +9739,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-250",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-250",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -10239,8 +10239,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-255",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-255",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -10283,8 +10283,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-262",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-262",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -10351,8 +10351,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-265",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-265",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -10563,8 +10563,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-267",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-267",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -10607,8 +10607,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-270",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-270",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -10675,8 +10675,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-272",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-272",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -10791,8 +10791,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-277",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-277",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -10867,8 +10867,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-286",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-286",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -11015,8 +11015,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-288",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-288",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -11139,8 +11139,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-291",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-291",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -11215,8 +11215,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-297",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-297",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -11291,8 +11291,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-298",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-298",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -11527,8 +11527,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-299",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-299",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -11715,8 +11715,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-301",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-301",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -11839,8 +11839,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-310",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-310",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12107,8 +12107,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-311",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-311",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12311,8 +12311,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-313",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-313",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12475,8 +12475,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-315",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-315",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -12543,8 +12543,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-323",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-323",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12587,8 +12587,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-325",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-325",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12655,8 +12655,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-347",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-347",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12731,8 +12731,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-350",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-350",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -12807,8 +12807,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-354",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-354",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -13115,8 +13115,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-357",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-357",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
@@ -13239,8 +13239,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-375",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-375",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -13323,8 +13323,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-401",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-401",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -13679,8 +13679,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-413",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-413",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -13755,8 +13755,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-418",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-418",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -13815,8 +13815,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-432",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-432",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -13947,8 +13947,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-435",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-435",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14047,8 +14047,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-473",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-473",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14115,8 +14115,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-478",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-478",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14549,8 +14549,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-491",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-491",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14601,8 +14601,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-508",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-508",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14645,8 +14645,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-511",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-511",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14689,8 +14689,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-515",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-515",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14765,8 +14765,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-517",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-517",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -14865,8 +14865,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-523",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-523",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -15045,8 +15045,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-524",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-524",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -15161,8 +15161,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-525",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-525",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -15261,8 +15261,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-529",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-529",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -15337,8 +15337,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-530",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-530",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -15749,8 +15749,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-535",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-535",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -15913,8 +15913,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-545",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-545",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16005,8 +16005,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-548",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-548",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16065,8 +16065,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-557",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-557",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16125,8 +16125,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-559",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-559",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16169,8 +16169,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-562",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-562",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16333,8 +16333,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-577",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-577",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16393,8 +16393,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-620",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-620",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16685,8 +16685,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-623",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-623",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16729,8 +16729,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-633",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-633",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16781,8 +16781,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-640",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-640",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -16977,8 +16977,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-688",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-688",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17069,8 +17069,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-690",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-690",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17129,8 +17129,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-692",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-692",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17189,8 +17189,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-706",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-706",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17273,8 +17273,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-722",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-722",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17325,8 +17325,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-728",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-728",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17401,8 +17401,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-743",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-743",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17445,8 +17445,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-754",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-754",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17833,8 +17833,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-756",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-756",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -17909,8 +17909,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-766",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-766",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -18481,8 +18481,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-775",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-775",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -18621,8 +18621,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-786",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-786",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -18713,8 +18713,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-789",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-789",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -18781,8 +18781,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-798",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-798",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -18969,8 +18969,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-802",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-802",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19101,8 +19101,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-817",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-817",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19161,8 +19161,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-829",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-829",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19269,8 +19269,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-835",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-835",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19561,8 +19561,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-840",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-840",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19613,8 +19613,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-855",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-855",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19729,8 +19729,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-864",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-864",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19773,8 +19773,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-875",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-875",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19833,8 +19833,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-893",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-893",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -19941,8 +19941,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-908",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-908",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -20001,8 +20001,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-910",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-910",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -20149,8 +20149,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-927",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-927",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -20217,8 +20217,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-929",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-929",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
@@ -20277,8 +20277,8 @@
     {
       "type": "Feature",
       "properties": {
-        "site_id": "LKO-ENC-20261116-947",
-        "detected_date": "20261116",
+        "site_id": "LKO-ENC-20261117-947",
+        "detected_date": "20261117",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
