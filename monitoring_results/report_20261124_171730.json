@@ -1,0 +1,33 @@
+{
+  "timestamp": "20261124_171730",
+  "acquisition_date": "20261123",
+  "cloud_cover_percent": 0.0,
+  "area_km2": 419.4,
+  "class_distribution": {
+    "Dense Forest": {
+      "pixels": 714161,
+      "percent": 17.03
+    },
+    "Urban": {
+      "pixels": 2813309,
+      "percent": 67.07
+    },
+    "Open Forest": {
+      "pixels": 19652,
+      "percent": 0.47
+    },
+    "Agriculture": {
+      "pixels": 520901,
+      "percent": 12.42
+    },
+    "Water": {
+      "pixels": 73606,
+      "percent": 1.75
+    },
+    "Bare/Fallow": {
+      "pixels": 52675,
+      "percent": 1.26
+    }
+  },
+  "alerts": []
+}
