@@ -1,179 +1,179 @@
 {
-  "timestamp": "20261127_162511",
-  "acquisition_date": "20261125",
+  "timestamp": "20261128_151753",
+  "acquisition_date": "20261128",
   "cloud_cover_percent": 0.0,
   "area_km2": 419.4,
   "class_distribution": {
     "Dense Forest": {
-      "pixels": 680061,
-      "percent": 16.21
+      "pixels": 627750,
+      "percent": 14.97
     },
     "Urban": {
-      "pixels": 2849381,
-      "percent": 67.93
+      "pixels": 2903964,
+      "percent": 69.24
     },
     "Open Forest": {
-      "pixels": 18928,
-      "percent": 0.45
+      "pixels": 18222,
+      "percent": 0.43
     },
     "Agriculture": {
-      "pixels": 514449,
-      "percent": 12.27
+      "pixels": 504315,
+      "percent": 12.02
     },
     "Water": {
-      "pixels": 76584,
-      "percent": 1.83
+      "pixels": 80464,
+      "percent": 1.92
     },
     "Bare/Fallow": {
-      "pixels": 54901,
-      "percent": 1.31
+      "pixels": 59589,
+      "percent": 1.42
     }
   },
   "alerts": [],
   "encroachments": {
-    "total_expansion_sites": 68,
-    "restricted_violations": 68,
-    "total_violation_area_sqm": 255500,
+    "total_expansion_sites": 86,
+    "restricted_violations": 86,
+    "total_violation_area_sqm": 441400,
     "top_alerts": [
       {
-        "site_id": "LKO-ENC-20261127-454",
-        "detected_date": "20261127",
+        "site_id": "LKO-ENC-20261128-550",
+        "detected_date": "20261128",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
         "zone_category": "River_Buffer",
         "previous_landcover": "Agriculture",
-        "area_sqm": 25700,
-        "area_bigha": 10.16,
-        "latitude": 26.81433,
-        "longitude": 81.01245,
-        "maps_url": "https://www.google.com/maps?q=26.81433,81.01245"
+        "area_sqm": 73500,
+        "area_bigha": 29.05,
+        "latitude": 26.81408,
+        "longitude": 81.01358,
+        "maps_url": "https://www.google.com/maps?q=26.81408,81.01358"
       },
       {
-        "site_id": "LKO-ENC-20261127-208",
-        "detected_date": "20261127",
+        "site_id": "LKO-ENC-20261128-534",
+        "detected_date": "20261128",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Gomti River Protected Floodplain",
+        "zone_category": "River_Buffer",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 33400,
+        "area_bigha": 13.2,
+        "latitude": 26.81752,
+        "longitude": 81.01086,
+        "maps_url": "https://www.google.com/maps?q=26.81752,81.01086"
+      },
+      {
+        "site_id": "LKO-ENC-20261128-246",
+        "detected_date": "20261128",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
         "zone_category": "Forest_Reserve",
         "previous_landcover": "Agriculture",
-        "area_sqm": 20900,
-        "area_bigha": 8.26,
-        "latitude": 26.90505,
+        "area_sqm": 20700,
+        "area_bigha": 8.18,
+        "latitude": 26.90504,
         "longitude": 81.00942,
-        "maps_url": "https://www.google.com/maps?q=26.90505,81.00942"
+        "maps_url": "https://www.google.com/maps?q=26.90504,81.00942"
       },
       {
-        "site_id": "LKO-ENC-20261127-110",
-        "detected_date": "20261127",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 13900,
-        "area_bigha": 5.49,
-        "latitude": 26.92908,
-        "longitude": 81.01844,
-        "maps_url": "https://www.google.com/maps?q=26.92908,81.01844"
-      },
-      {
-        "site_id": "LKO-ENC-20261127-441",
-        "detected_date": "20261127",
+        "site_id": "LKO-ENC-20261128-543",
+        "detected_date": "20261128",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
         "zone_category": "River_Buffer",
         "previous_landcover": "Agriculture",
-        "area_sqm": 13500,
-        "area_bigha": 5.34,
-        "latitude": 26.81754,
-        "longitude": 81.01176,
-        "maps_url": "https://www.google.com/maps?q=26.81754,81.01176"
+        "area_sqm": 18800,
+        "area_bigha": 7.43,
+        "latitude": 26.8155,
+        "longitude": 81.0159,
+        "maps_url": "https://www.google.com/maps?q=26.81550,81.01590"
       },
       {
-        "site_id": "LKO-ENC-20261127-457",
-        "detected_date": "20261127",
+        "site_id": "LKO-ENC-20261128-106",
+        "detected_date": "20261128",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 18200,
+        "area_bigha": 7.19,
+        "latitude": 26.92899,
+        "longitude": 81.01846,
+        "maps_url": "https://www.google.com/maps?q=26.92899,81.01846"
+      },
+      {
+        "site_id": "LKO-ENC-20261128-669",
+        "detected_date": "20261128",
         "is_restricted_violation": true,
         "severity": "CRITICAL",
         "zone_name": "Gomti River Protected Floodplain",
         "zone_category": "River_Buffer",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 16900,
+        "area_bigha": 6.68,
+        "latitude": 26.78573,
+        "longitude": 81.04183,
+        "maps_url": "https://www.google.com/maps?q=26.78573,81.04183"
+      },
+      {
+        "site_id": "LKO-ENC-20261128-398",
+        "detected_date": "20261128",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Gomti River Protected Floodplain",
+        "zone_category": "River_Buffer",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 15700,
+        "area_bigha": 6.21,
+        "latitude": 26.8646,
+        "longitude": 80.94052,
+        "maps_url": "https://www.google.com/maps?q=26.86460,80.94052"
+      },
+      {
+        "site_id": "LKO-ENC-20261128-277",
+        "detected_date": "20261128",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 13600,
+        "area_bigha": 5.38,
+        "latitude": 26.89899,
+        "longitude": 81.02019,
+        "maps_url": "https://www.google.com/maps?q=26.89899,81.02019"
+      },
+      {
+        "site_id": "LKO-ENC-20261128-286",
+        "detected_date": "20261128",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
+        "previous_landcover": "Agriculture",
+        "area_sqm": 11400,
+        "area_bigha": 4.51,
+        "latitude": 26.8975,
+        "longitude": 81.02357,
+        "maps_url": "https://www.google.com/maps?q=26.89750,81.02357"
+      },
+      {
+        "site_id": "LKO-ENC-20261128-061",
+        "detected_date": "20261128",
+        "is_restricted_violation": true,
+        "severity": "CRITICAL",
+        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
+        "zone_category": "Forest_Reserve",
         "previous_landcover": "Bare / Fallow",
-        "area_sqm": 12500,
-        "area_bigha": 4.94,
-        "latitude": 26.81296,
-        "longitude": 81.01546,
-        "maps_url": "https://www.google.com/maps?q=26.81296,81.01546"
-      },
-      {
-        "site_id": "LKO-ENC-20261127-237",
-        "detected_date": "20261127",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 12000,
-        "area_bigha": 4.74,
-        "latitude": 26.899,
-        "longitude": 81.02027,
-        "maps_url": "https://www.google.com/maps?q=26.89900,81.02027"
-      },
-      {
-        "site_id": "LKO-ENC-20261127-242",
-        "detected_date": "20261127",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 8900,
-        "area_bigha": 3.52,
-        "latitude": 26.89759,
-        "longitude": 81.02359,
-        "maps_url": "https://www.google.com/maps?q=26.89759,81.02359"
-      },
-      {
-        "site_id": "LKO-ENC-20261127-058",
-        "detected_date": "20261127",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Bare / Fallow",
-        "area_sqm": 6500,
-        "area_bigha": 2.57,
-        "latitude": 26.94317,
-        "longitude": 80.9987,
-        "maps_url": "https://www.google.com/maps?q=26.94317,80.99870"
-      },
-      {
-        "site_id": "LKO-ENC-20261127-067",
-        "detected_date": "20261127",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 6300,
-        "area_bigha": 2.49,
-        "latitude": 26.94137,
-        "longitude": 81.02757,
-        "maps_url": "https://www.google.com/maps?q=26.94137,81.02757"
-      },
-      {
-        "site_id": "LKO-ENC-20261127-199",
-        "detected_date": "20261127",
-        "is_restricted_violation": true,
-        "severity": "CRITICAL",
-        "zone_name": "Kukrail Reserve Forest & Sanctuary Buffer",
-        "zone_category": "Forest_Reserve",
-        "previous_landcover": "Agriculture",
-        "area_sqm": 6200,
-        "area_bigha": 2.45,
-        "latitude": 26.90625,
-        "longitude": 81.02464,
-        "maps_url": "https://www.google.com/maps?q=26.90625,81.02464"
+        "area_sqm": 9600,
+        "area_bigha": 3.79,
+        "latitude": 26.94326,
+        "longitude": 80.9986,
+        "maps_url": "https://www.google.com/maps?q=26.94326,80.99860"
       }
     ]
   }
